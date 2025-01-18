@@ -1,28 +1,41 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
-import TheWelcome from './components/TheWelcome.vue';
+import ItemGrid from './components/ItemGrid.vue';
 </script>
 
 <template>
-  <nav class="nav">
+    <nav class="nav">
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
-  <HelloWorld class="hello-world">
-      <RouterView class="router-view" />
-  </HelloWorld>
-  <TheWelcome>
-  </TheWelcome>
+
+  <HelloWorld class="hello-world" />
+
+  <div class="item-grid-container">
+    <ItemGrid class="item-grid">
+    <RouterView class="router-view" />
+  </ItemGrid>
+  </div>
 </template>
 
 <style scoped>
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+} 
+
+.item-grid-container {
+  padding: 2rem;
+}
+
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2c3e50;
+  background-color: #4c7467;
   padding: 1rem;
   display: flex;
   gap: 1rem;
@@ -43,11 +56,12 @@ import TheWelcome from './components/TheWelcome.vue';
 }
 
 .hello-world {
-  position: absolute; /* Position relative to the viewport or parent */
-  top: 5rem; /* Adjust based on the navbar height */
-  left: 1rem;
+  display: flex;
+  align-items: center;
   padding: 2rem;
+  margin-top: 5rem; /* Adjust based on the navbar height */
 }
+
 
 .router-view {
   margin-top: 2rem;
