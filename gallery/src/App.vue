@@ -3,11 +3,19 @@ import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import ItemGrid from './components/ItemGrid.vue';
 
+import { useAuth0 } from '@auth0/auth0-vue';
 
+// Using the auth0 hook for authentication
+const { loginWithRedirect } = useAuth0();
+
+// Login method (directly in the setup)
+function login() {
+  loginWithRedirect();
+}
 </script>
 
 <template>
-    <nav class="nav">
+  <nav class="nav">
     <button @click="login">Log in</button>
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
@@ -17,30 +25,17 @@ import ItemGrid from './components/ItemGrid.vue';
 
   <div class="item-grid-container">
     <ItemGrid class="item-grid">
-    <RouterView class="router-view" />
-  </ItemGrid>
+      <RouterView class="router-view" />
+    </ItemGrid>
   </div>
 </template>
-
-<script lang = "ts">
-import { useAuth0 } from '@auth0/auth0-vue';
-
-  export default {
-    methods: {
-      login() {
-        this.$auth0.loginWithRedirect();
-      }
-    }
-  
-  };
-</script>
 
 <style scoped>
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
-} 
+}
 
 .item-grid-container {
   padding: 2rem;
@@ -77,7 +72,6 @@ html, body {
   padding: 2rem;
   margin-top: 5rem; /* Adjust based on the navbar height */
 }
-
 
 .router-view {
   margin-top: 2rem;
