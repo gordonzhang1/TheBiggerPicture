@@ -76,6 +76,15 @@ def get_images():
         "big_image": big_image_url
     }
 
+@app.delete("/api/delete-images")
+def delete_images():
+    if "urls" not in request.json:
+        abort(400)
+    
+    supabase.table("images").delete().in_("url", request.json["urls"]).execute()
+
+    return {"success": True}
+
 socketio = SocketIO(app)
 
 if __name__ == "__main__":
