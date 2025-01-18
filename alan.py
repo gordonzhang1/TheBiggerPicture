@@ -96,17 +96,18 @@ def get_images():
 
 @app.post("/api/create-category")
 def create_category():
-    if "image_name" not in request.form or "url" not in request.form:
+    if "image_name" not in request.form or "url" not in request.form or "user" not in request.form:
         abort(400)
 
+    user = request.form["user"]
     
     category_id = random.randint(0, 2000000000)
 
     # mycursor.execute(f"SELECT MAX(id) FROM categories")
     # highest = mycursor.fetchall()[0][0]
 
-    sql = "INSERT INTO categories (id, image_name, url) VALUES (%s, %s, %s)"
-    val = (category_id, request.form['image_name'], request.form['url'])
+    sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, %s, %s)"
+    val = (category_id, request.form['image_name'], request.form['url'], user)
     mycursor.execute(sql, val)
 
     mydb.commit()
@@ -128,6 +129,31 @@ def delete_image():
     
     return {"success": True}
 
+@app.post("api/get-mosaics")
+def get_mosaics():
+    if "user" not in request.form:
+        abort(400)
+
+    userid = request.form('user')
+
+    sql = f"SELECT * FROM categories WHERE user={userid}"
+
+    mycursor.execute(sql)
+    result = mycursor.fetchall()
+
+    ID = 0 #potentially wrong
+    IMAGE_NAMES = 1
+    URL = 2
+    
+    ids = [i[ID] for i in result]
+    image_names = [i[IMAGE_NAMES] for i in result]
+    urls = [i[URL] for i in result]
+
+    return {
+        "ids": ids,
+        "image_names": image_names,
+        "urls": urls
+    }
 
 
 socketio = SocketIO(app)

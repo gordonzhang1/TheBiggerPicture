@@ -6,17 +6,33 @@ import ItemGrid from './components/ItemGrid.vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 // Using the auth0 hook for authentication
-const { loginWithRedirect } = useAuth0();
+
+const { loginWithRedirect, user, isAuthenticated } = useAuth0();
+const { logout } = useAuth0();
 
 // Login method (directly in the setup)
 function login() {
   loginWithRedirect();
 }
+
+function logOut(){
+  
+  logout({ logoutParams: { returnTo: window.location.origin } });
+        
+}
+
 </script>
 
 <template>
   <nav class="nav">
-    <button @click="login">Log in</button>
+    <div> 
+      <button @click="login">Log in</button>
+      <pre>
+        <code>{{ user.email }}</code>
+      </pre>
+    </div>
+    <button @click="logOut">Log out</button>
+
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
