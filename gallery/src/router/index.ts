@@ -1,29 +1,23 @@
- mosaicswitch
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import Mosaic from "../views/Mosaic.vue";
 
- main
+import { createRouter, createWebHistory } from "vue-router";
+import Mosaic from "../views/Mosaic.vue";
+import ItemDetail from "@/components/ItemDetail.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: HomeView,
+      path: '/item/:id', // Dynamic route with item ID
+      name: 'item-detail',
+      component: ItemDetail, // Replace with your ItemDetail component
+      props: true, // Automatically pass the route params as props to the component
     },
     {
-mosaicswitch
-      path: "/mosaic",
-      name: "mosaic",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: Mosaic,
- main
-    },
+      path: '/mosaic',
+      name: 'mosaic',
+      component: () => import('../views/Mosaic.vue'),
+    }
   ],
 });
 
-export default router;
+export default router

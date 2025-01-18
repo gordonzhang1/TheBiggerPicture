@@ -1,5 +1,4 @@
 <script setup lang="ts">
-mosaicswitch
 
 import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
@@ -38,9 +37,15 @@ function logOut(){
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
-mosaicswitch
-  <RouterView />
- main
+  <RouterView class="router-view" />
+
+  <HelloWorld class="hello-world" />
+
+  <div class="item-grid-container">
+    <ItemGrid class="item-grid">
+      <RouterView class="router-view" />
+    </ItemGrid>
+  </div>
 </template>
 
 <style scoped>
