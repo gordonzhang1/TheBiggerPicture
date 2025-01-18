@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import axios from "axios";
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
@@ -40,6 +41,46 @@ const images = ref([
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
+async function handleFileUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input?.files) {
+    const fileList = input.files;
+    const formData = new FormData(); // Create FormData to hold files
+
+    // Loop through the selected files
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+
+      // Add file to formData
+      formData.append("files[]", file);
+
+      // Read and preview the file (for images)
+      const reader = new FileReader();
+      reader.onload = () => {
+        // Push file preview to the images array
+        images.value.push(reader.result as string);
+      };
+      reader.readAsDataURL(file); // Convert the file to a data URL for preview
+    }
+
+    // Send the files to the backend
+    try {
+      const response = await axios.post(
+        "https://your-backend-url.com/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Required for file uploads
+          },
+        }
+      );
+      console.log("Upload successful:", response.data); // Handle successful response
+      // You can update the UI with the server response if needed
+    } catch (error) {
+      console.error("Error uploading files:", error); // Handle error
+    }
+  }
+}
 </script>
 
 <template>
@@ -53,7 +94,13 @@ function removeImage(index: number) {
           </div>
         </div>
       </div>
-      <div class="uploadbutton">Upload Image</div>
+      <input
+        type="file"
+        id="fileInput"
+        multiple
+        @change="handleFileUpload"
+        class="file-upload-input"
+      />
     </div>
     <div class="right-side-con">
       <div class="right-center">

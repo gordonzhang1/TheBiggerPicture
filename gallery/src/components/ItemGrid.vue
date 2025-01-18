@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { backendData } from '@/stores/backend-data';
 import { ref, computed } from 'vue';
 
 // List of items (Add a unique ID for each item)
@@ -37,14 +38,14 @@ const filteredItems = computed(() => {
     <!-- Grid of items -->
     <div class="grid-items">
       <RouterLink
-        v-for="(item, index) in filteredItems"
+        v-for="(item, index) in backendData.mosaics as any"
         :key="index"
         :to="{ name: 'item-detail', params: { id: item.id } }" 
         class="grid-item-link"
       >
         <div class="grid-item">
-          <img :src="item.image" :alt="item.title" class="grid-item-image" />
-          <h3 class="grid-item-title">{{ item.title }}</h3>
+          <img :src="item.url" :alt="item.image_name" class="grid-item-image" />
+          <h3 class="grid-item-title">{{ item.image_name }}</h3>
         </div>
       </RouterLink>
     </div>

@@ -5,6 +5,8 @@ import HelloWorld from './components/HelloWorld.vue';
 import ItemGrid from './components/ItemGrid.vue';
 
 import { useAuth0 } from '@auth0/auth0-vue';
+import { watch } from 'vue';
+import { backendData } from './stores/backend-data';
 
 // Using the auth0 hook for authentication
 
@@ -21,6 +23,32 @@ function logOut(){
   logout({ logoutParams: { returnTo: window.location.origin } });
         
 }
+
+async function fetchData(email: string | undefined) {
+  console.log('hey');
+  if (!email) {
+    return;
+  }
+
+  const data = new FormData();
+
+  data.append('user', email);
+
+  const res = await fetch('http://127.0.0.1:5001/api/get-mosaics', {
+    method: 'POST',
+    body: data
+  });
+
+  const json = await res.json();
+
+  backendData.mosaics = json.ids.map((id: number, i: number) => ({
+    id,
+    image_name: json.image_names[i],
+    url: json.urls[i]
+  }));
+}
+
+watch(() => user.value && user.value.email, fetchData, { immediate: true })
 
 </script>
 
