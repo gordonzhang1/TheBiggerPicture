@@ -1,74 +1,55 @@
-<script>
-export default {
-  data() {
-    return {
-      links: ['Home', 'Analytics', 'Settings', 'Profile'],
-    };
-  },
-};
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+<script setup lang="ts">
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+import TheWelcome from './components/TheWelcome.vue';
 </script>
 
 <template>
-  <div class="dashboard">
-    <aside class="sidebar">
-      <ul>
-        <li v-for="link in links" :key="link">{{ link }}</li>
-      </ul>
-    </aside>
-    <header class="header">
-      <h1>Dashboard</h1>
-    </header>
-    <main class="main-content">
-      <section>
-        <!-- Add charts, tables, etc. -->
-        <h2>Welcome to the Dashboard</h2>
-      </section>
-    </main>
-    <footer class="footer">
-      <p>© 2025 Your Company</p>
-    </footer>
-  </div>
+  <nav class="nav">
+    <RouterLink to="/">DASHBOARD</RouterLink>
+    <RouterLink to="/mosaic">MOSAIC</RouterLink>
+  </nav>
+  <HelloWorld class="hello-world">
+      <RouterView class="router-view" />
+  </HelloWorld>
+  <TheWelcome>
+  </TheWelcome>
 </template>
 
 <style scoped>
-/* Add custom styling here */
-.dashboard {
-  display: grid;
-  grid-template-areas:
-    "sidebar header"
-    "sidebar main"
-    "sidebar footer";
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: auto 1fr auto;
-  height: 100vh;
-}
-
-.sidebar {
-  grid-area: sidebar;
-  background: #2c3e50;
-  color: #ecf0f1;
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2c3e50;
   padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  z-index: 1000;
 }
 
-.header {
-  grid-area: header;
-  background: #34495e;
+.nav a {
   color: white;
-  padding: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
 }
 
-.main-content {
-  grid-area: main;
-  padding: 1rem;
+.nav a:hover {
+  background-color: #34495e;
 }
 
-.footer {
-  grid-area: footer;
-  background: #34495e;
-  color: white;
-  text-align: center;
-  padding: 0.5rem;
+.hello-world {
+  position: absolute; /* Position relative to the viewport or parent */
+  top: 5rem; /* Adjust based on the navbar height */
+  left: 1rem;
+  padding: 2rem;
+}
+
+.router-view {
+  margin-top: 2rem;
 }
 </style>

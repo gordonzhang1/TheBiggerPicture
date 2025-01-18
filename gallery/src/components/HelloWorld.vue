@@ -7,12 +7,19 @@ defineProps<{
   <div class="greetings">
     <h1 class="green">Mosaic Gallery</h1>
     <h3>
-      Here, you can discover a more meaningful way to share your photos.
+      A more meaningful way to share your photos.
     </h3>
   </div>
 </template>
 
 <style scoped>
+.greetings {
+  /* display text side to side */
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
 h1 {
   font-weight: 500;
   font-size: 2.6rem;
