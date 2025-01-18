@@ -1,14 +1,11 @@
+import os
+from uuid import uuid4
+
 import boto3
-import cv2
 from dotenv import load_dotenv
 from flask import abort, Flask, request
-from math import sqrt
-import os
-import requests
-import shutil
-from flask_socketio import emit, SocketIO
+from flask_socketio import SocketIO
 from supabase import create_client
-from uuid import uuid4
 from werkzeug.utils import secure_filename
 
 load_dotenv()
@@ -80,11 +77,6 @@ def get_images():
     }
 
 socketio = SocketIO(app)
-
-@socketio.on("add image")
-def handle_json(json):
-    # print("test")
-    socketio.emit("add image", json)
 
 if __name__ == "__main__":
     socketio.run(app, port=5001)
