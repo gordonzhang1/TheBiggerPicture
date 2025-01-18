@@ -26,31 +26,15 @@ function logOut(){
 
 <template>
   <nav class="nav">
-    <RouterLink to="/">
-      <div> 
-        <button @click="login">Log in</button>
-        <pre>
-          <code>{{ user.email }}</code>
-        </pre>
-      </div>
-    </RouterLink>
-    <RouterLink to="/">
-      <button @click="logOut">Log out</button>
-    </RouterLink>
-    
-
-    <RouterLink to="/">DASHBOARD</RouterLink>
+    <RouterLink to="/dashboard" @click="login">Log in</RouterLink>
+    <button @click="logOut">Log Out</button>
+    <RouterLink to="/dashboard">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
+    <h1>{{user.email}}</h1>
+    
   </nav>
   <RouterView class="router-view" />
 
-  <HelloWorld class="hello-world" />
-
-  <div class="item-grid-container">
-    <ItemGrid class="item-grid">
-      <RouterView class="router-view" />
-    </ItemGrid>
-  </div>
 </template>
 
 <style scoped>
@@ -58,10 +42,6 @@ html, body {
   width: 100%;
   height: 100%;
   margin: 0;
-}
-
-.item-grid-container {
-  padding: 2rem;
 }
 
 .nav {
@@ -88,14 +68,6 @@ html, body {
 .nav a:hover {
   background-color: #34495e;
 }
-
-.hello-world {
-  display: flex;
-  align-items: center;
-  padding: 2rem;
-  margin-top: 5rem; /* Adjust based on the navbar height */
-}
-
 .router-view {
   margin-top: 2rem;
 }

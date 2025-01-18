@@ -1,7 +1,5 @@
-
-import { createRouter, createWebHistory } from "vue-router";
-import Mosaic from "../views/Mosaic.vue";
-import ItemDetail from "@/components/ItemDetail.vue";
+import { createRouter, createWebHistory } from 'vue-router'
+import ItemDetail from '../components/ItemDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,6 +9,11 @@ const router = createRouter({
       name: 'item-detail',
       component: ItemDetail, // Replace with your ItemDetail component
       props: true, // Automatically pass the route params as props to the component
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('../views/Dashboard.vue'),
     },
     {
       path: '/mosaic',
