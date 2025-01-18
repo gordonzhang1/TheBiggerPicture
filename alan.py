@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from flask import abort, Flask, request
+from flask_cors import CORS, cross_origin
 from flask_socketio import emit, SocketIO
 from werkzeug.utils import secure_filename
 import os
@@ -14,6 +15,7 @@ UPLOAD_FOLDER = ""
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
@@ -129,16 +131,18 @@ def delete_image():
     
     return {"success": True}
 
-@app.post("api/get-mosaics")
+@app.post("/api/get-mosaics")
 def get_mosaics():
     if "user" not in request.form:
         abort(400)
 
-    userid = request.form('user')
+    userid = request.form['user']
 
-    sql = f"SELECT * FROM categories WHERE user={userid}"
+    sql = f"SELECT * FROM categories WHERE user=\"{userid}\""
+    # val = (userid,)
 
     mycursor.execute(sql)
+    # print(sql)
     result = mycursor.fetchall()
 
     ID = 0 #potentially wrong
