@@ -1,24 +1,50 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
-import TheWelcome from "./components/TheWelcome.vue";
+mosaicswitch
+
+import { RouterLink, RouterView } from 'vue-router';
+import HelloWorld from './components/HelloWorld.vue';
+import ItemGrid from './components/ItemGrid.vue';
+
+import { useAuth0 } from '@auth0/auth0-vue';
+
+// Using the auth0 hook for authentication
+const { loginWithRedirect } = useAuth0();
+
+// Login method (directly in the setup)
+function login() {
+  loginWithRedirect();
+}
+main
 </script>
 
 <template>
   <nav class="nav">
+    <button @click="login">Log in</button>
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
+mosaicswitch
   <RouterView />
+ main
 </template>
 
 <style scoped>
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.item-grid-container {
+  padding: 2rem;
+}
+
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #2c3e50;
+  background-color: #4c7467;
   padding: 1rem;
   display: flex;
   gap: 1rem;
@@ -39,10 +65,10 @@ import TheWelcome from "./components/TheWelcome.vue";
 }
 
 .hello-world {
-  position: absolute; /* Position relative to the viewport or parent */
-  top: 5rem; /* Adjust based on the navbar height */
-  left: 1rem;
+  display: flex;
+  align-items: center;
   padding: 2rem;
+  margin-top: 5rem; /* Adjust based on the navbar height */
 }
 
 .router-view {

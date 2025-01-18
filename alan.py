@@ -1,4 +1,6 @@
+from dotenv import load_dotenv
 from flask import abort, Flask, request
+from flask_socketio import emit, SocketIO
 from werkzeug.utils import secure_filename
 import os
 import boto3
@@ -6,8 +8,10 @@ from uuid import uuid4
 import random
 import mysql.connector
 
+load_dotenv()
+
 UPLOAD_FOLDER = ""
-ALLOWED_EXTENSIONS = {"png", "jpg"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -25,7 +29,6 @@ mycursor = mydb.cursor()
 def valid_image(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 @app.post("/api/upload-images")
 def upload_images():
     """POST endpoint that uploads the given images to the S3 bucket and SQL database."""
@@ -36,7 +39,6 @@ def upload_images():
     images = request.files.getlist("images")
     category = request.form["category"]
     rows = []
-
     for _, image in enumerate(images):
         filename = secure_filename(image.filename)
 
@@ -46,13 +48,13 @@ def upload_images():
         extension = filename.rsplit('.', 1)[1].lower()
         stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
 
-        # s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=image)
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=image)
 
         rows.append({
-            # "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
-            "url": stored_filename,
+            "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
+            # "url": stored_filename,
             "category": category,
-            "id": random.randint(0, 1000000000) #change so no collision
+            "id": random.randint(0, 2000000000) #change so no collision
         })
 
     
@@ -63,6 +65,10 @@ def upload_images():
         mycursor.execute(sql, val)
 
     mydb.commit()
+
+    socketio.emit(f"add image {category}", {
+        "images": [row["url"] for row in rows]
+    })
     
     return {"success": True}
 
@@ -87,3 +93,44 @@ def get_images():
         "album_images": image_urls,
         "big_image": big_image_url
     }
+
+@app.post("/api/create-category")
+def create_category():
+    if "image_name" not in request.form or "url" not in request.form:
+        abort(400)
+
+    
+    category_id = random.randint(0, 2000000000)
+
+    # mycursor.execute(f"SELECT MAX(id) FROM categories")
+    # highest = mycursor.fetchall()[0][0]
+
+    sql = "INSERT INTO categories (id, image_name, url) VALUES (%s, %s, %s)"
+    val = (category_id, request.form['image_name'], request.form['url'])
+    mycursor.execute(sql, val)
+
+    mydb.commit()
+    
+    return {"success": True}
+
+
+@app.post("/api/delete-image")
+def delete_image():
+    if "id" not in request.form:
+        abort(400)
+
+    image_id = request.form['id']
+
+    sql = f"DELETE FROM images WHERE id={image_id}"
+    mycursor.execute(sql)
+
+    mydb.commit()
+    
+    return {"success": True}
+
+
+
+socketio = SocketIO(app)
+
+if __name__ == "__main__":
+    socketio.run(app, port=5001)
