@@ -26,6 +26,14 @@ mydb = mysql.connector.connect(
   database="users"
 )
 
+# mydb = mysql.connector.connect(
+#   host=os.getenv('HOST'),
+#   user=os.getenv('USER'),
+#   password=os.getenv('PASSWORD'),
+#   database=os.getenv('DATABASE'),
+#   port=os.getenv('PORT')
+# )
+
 mycursor = mydb.cursor()
 
 def valid_image(filename):
