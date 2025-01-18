@@ -19,20 +19,20 @@ cors = CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
-# mydb = mysql.connector.connect(
-#   host="localhost",
-#   user="alanbui",
-#   password="uofthacks12!",
-#   database="users"
-# )
-
 mydb = mysql.connector.connect(
-  host=os.getenv('HOST'),
-  user=os.getenv('USER'),
-  password=os.getenv('PASSWORD'),
-  database=os.getenv('DATABASE'),
-  port=os.getenv('PORT')
+  host="localhost",
+  user="alanbui",
+  password="uofthacks12!",
+  database="users"
 )
+
+# mydb = mysql.connector.connect(
+#   host=os.getenv('HOST'),
+#   user=os.getenv('USER'),
+#   password=os.getenv('PASSWORD'),
+#   database=os.getenv('DATABASE'),
+#   port=os.getenv('PORT')
+# )
 
 mycursor = mydb.cursor()
 
