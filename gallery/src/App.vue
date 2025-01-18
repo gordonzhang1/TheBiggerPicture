@@ -1,4 +1,6 @@
 <script setup lang="ts">
+mosaicswitch
+
 import { RouterLink, RouterView } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import ItemGrid from './components/ItemGrid.vue';
@@ -12,6 +14,7 @@ const { loginWithRedirect } = useAuth0();
 function login() {
   loginWithRedirect();
 }
+main
 </script>
 
 <template>
@@ -20,14 +23,9 @@ function login() {
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
-
-  <HelloWorld class="hello-world" />
-
-  <div class="item-grid-container">
-    <ItemGrid class="item-grid">
-      <RouterView class="router-view" />
-    </ItemGrid>
-  </div>
+mosaicswitch
+  <RouterView />
+ main
 </template>
 
 <style scoped>
