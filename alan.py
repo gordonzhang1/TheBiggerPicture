@@ -17,11 +17,19 @@ app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
+# mydb = mysql.connector.connect(
+#   host="localhost",
+#   user="alanbui",
+#   password="uofthacks12!",
+#   database="users"
+# )
+
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="alanbui",
-  password="uofthacks12!",
-  database="users"
+  host=os.getenv('HOST'),
+  user=os.getenv('USER'),
+  password=os.getenv('PASSWORD'),
+  database=os.getenv('DATABASE'),
+  port=os.getenv('PORT')
 )
 
 mycursor = mydb.cursor()
@@ -129,7 +137,7 @@ def delete_image():
     
     return {"success": True}
 
-@app.post("api/get-mosaics")
+@app.post("/api/get-mosaics")
 def get_mosaics():
     if "user" not in request.form:
         abort(400)
