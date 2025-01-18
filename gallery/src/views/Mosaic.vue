@@ -40,6 +40,24 @@ const images = ref([
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
+function handleFileUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input?.files) {
+    const fileList = input.files;
+    // You can process the file list (e.g., upload the files or show previews)
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i];
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        // Here, we're assuming the image is being displayed
+        images.value.push(reader.result as string); // Add file URL to the images array
+      };
+
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
+  }
+}
 </script>
 
 <template>
@@ -53,7 +71,13 @@ function removeImage(index: number) {
           </div>
         </div>
       </div>
-      <div class="uploadbutton">Upload Image</div>
+      <input
+        type="file"
+        id="fileInput"
+        multiple
+        @change="handleFileUpload"
+        class="file-upload-input"
+      />
     </div>
     <div class="right-side-con">
       <div class="right-center">
