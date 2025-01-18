@@ -43,31 +43,36 @@ function removeImage(index: number) {
 </script>
 
 <template>
-  <div class="uploadbigcon">
-    <div class="uploadcon">
-      <div class="image-grid">
-        <div v-for="(img, index) in images" :key="index" class="image-item">
-          <img :src="img" :alt="'Image ' + (index + 1)" />
-          <button class="delete-btn" @click="removeImage(index)">X</button>
+  <div class="outer-con">
+    <div class="uploadbigcon">
+      <div class="uploadcon">
+        <div class="image-grid">
+          <div v-for="(img, index) in images" :key="index" class="image-item">
+            <img :src="img" :alt="'Image ' + (index + 1)" />
+            <button class="delete-btn" @click="removeImage(index)">X</button>
+          </div>
         </div>
       </div>
+      <div class="uploadbutton">Upload Image</div>
     </div>
-    <div class="uploadbutton">Upload Image</div>
-  </div>
-
-  <div class="right-side-con">
-    <div class="right-center">
-      <div class="generate">Generate Image</div>
-      <img class="mosaicpicture" src="https://placehold.co/600x600" />
-      <div class="bottom-buttons">
-        <div class="collab">Collaborate</div>
-        <div class="slide">Start Slideshow</div>
+    <div class="right-side-con">
+      <div class="right-center">
+        <div class="generate">Generate Image</div>
+        <img class="mosaicpicture" src="https://placehold.co/600x600" />
+        <div class="bottom-buttons">
+          <div class="collab">Collaborate</div>
+          <div class="slide">Start Slideshow</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style>
+.outer-con {
+  display: flex;
+  gap: 10px;
+}
 .uploadcon {
   margin-top: 50px;
   height: 650px;
