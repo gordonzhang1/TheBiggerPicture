@@ -26,13 +26,18 @@ function logOut(){
 
 <template>
   <nav class="nav">
-    <div> 
-      <button @click="login">Log in</button>
-      <pre>
-        <code>{{ user.email }}</code>
-      </pre>
-    </div>
-    <button @click="logOut">Log out</button>
+    <RouterLink to="/">
+      <div> 
+        <button @click="login">Log in</button>
+        <pre>
+          <code>{{ user.email }}</code>
+        </pre>
+      </div>
+    </RouterLink>
+    <RouterLink to="/">
+      <button @click="logOut">Log out</button>
+    </RouterLink>
+    
 
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
