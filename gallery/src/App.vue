@@ -20,6 +20,7 @@ function login() {
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
+  <RouterView class="router-view" />
 
   <HelloWorld class="hello-world" />
 
