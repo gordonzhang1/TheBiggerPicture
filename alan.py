@@ -52,7 +52,7 @@ def upload_images():
             # "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
             "url": stored_filename,
             "category": category,
-            "id": random.randint(0, 1000000000) #change so no collision
+            "id": random.randint(0, 2000000000) #change so no collision
         })
 
     
@@ -87,3 +87,38 @@ def get_images():
         "album_images": image_urls,
         "big_image": big_image_url
     }
+
+@app.post("/api/create-category")
+def create_category():
+    if "image_name" not in request.form or "url" not in request.form:
+        abort(400)
+
+    
+    category_id = random.randint(0, 2000000000)
+
+    # mycursor.execute(f"SELECT MAX(id) FROM categories")
+    # highest = mycursor.fetchall()[0][0]
+
+    sql = "INSERT INTO categories (id, image_name, url) VALUES (%s, %s, %s)"
+    val = (category_id, request.form['image_name'], request.form['url'])
+    mycursor.execute(sql, val)
+
+    mydb.commit()
+    
+    return {"success": True}
+
+
+@app.post("/api/delete-image")
+def delete_image():
+    if "id" not in request.form:
+        abort(400)
+
+    image_id = request.form['id']
+
+    sql = f"DELETE FROM images WHERE id={image_id}"
+    mycursor.execute(sql)
+
+    mydb.commit()
+    
+    return {"success": True}
+
