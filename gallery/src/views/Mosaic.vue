@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import axios from "axios";
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
@@ -40,21 +41,43 @@ const images = ref([
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
-function handleFileUpload(event: Event) {
+async function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input?.files) {
     const fileList = input.files;
-    // You can process the file list (e.g., upload the files or show previews)
+    const formData = new FormData(); // Create FormData to hold files
+
+    // Loop through the selected files
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
+
+      // Add file to formData
+      formData.append("files[]", file);
+
+      // Read and preview the file (for images)
       const reader = new FileReader();
-
       reader.onload = () => {
-        // Here, we're assuming the image is being displayed
-        images.value.push(reader.result as string); // Add file URL to the images array
+        // Push file preview to the images array
+        images.value.push(reader.result as string);
       };
+      reader.readAsDataURL(file); // Convert the file to a data URL for preview
+    }
 
-      reader.readAsDataURL(file); // Read the file as a data URL
+    // Send the files to the backend
+    try {
+      const response = await axios.post(
+        "https://your-backend-url.com/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Required for file uploads
+          },
+        }
+      );
+      console.log("Upload successful:", response.data); // Handle successful response
+      // You can update the UI with the server response if needed
+    } catch (error) {
+      console.error("Error uploading files:", error); // Handle error
     }
   }
 }
