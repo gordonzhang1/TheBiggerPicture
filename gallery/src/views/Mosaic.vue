@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, defineProps, computed } from "vue";
 import axios from "axios";
+import { backendData } from "@/stores/backend-data";
+  
+// Define route props for the ID
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
@@ -38,6 +47,26 @@ const images = ref([
   "https://placehold.co/600x600",
   // Add more image URLs as needed
 ]);
+
+async function fetchData() {
+  const formData = new FormData();
+
+  formData.append('category', props.id);
+
+  const res = await fetch('http://127.0.0.1:5001/api/get-images', {
+    method: 'POST',
+    body: formData,
+  });
+
+  const json = await res.json();
+
+  images.value = json.album_images;
+}
+
+onMounted(() => {
+  fetchData();
+});
+
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
@@ -46,13 +75,14 @@ async function handleFileUpload(event: Event) {
   if (input?.files) {
     const fileList = input.files;
     const formData = new FormData(); // Create FormData to hold files
+    formData.append("category", props.id);
 
     // Loop through the selected files
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
 
       // Add file to formData
-      formData.append("files[]", file);
+      formData.append("images", file);
 
       // Read and preview the file (for images)
       const reader = new FileReader();
@@ -66,7 +96,7 @@ async function handleFileUpload(event: Event) {
     // Send the files to the backend
     try {
       const response = await axios.post(
-        "https://your-backend-url.com/upload",
+        "http://127.0.0.1:5001/api/upload-images",
         formData,
         {
           headers: {
