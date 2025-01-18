@@ -6,6 +6,7 @@ from math import sqrt
 import os
 import requests
 import shutil
+from flask_socketio import emit, SocketIO
 from supabase import create_client
 from uuid import uuid4
 from werkzeug.utils import secure_filename
@@ -38,32 +39,26 @@ def upload_images():
     for _, image in enumerate(images):
         filename = secure_filename(image.filename)
 
-        if not valid_image(filename):
-            continue
+        # if not valid_image(filename):
+        #     continue
 
         extension = filename.rsplit('.', 1)[1].lower()
         stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
 
-        file_path = os.path.join(app.config["UPLOAD_FOLDER"], stored_filename)
-
         s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=image)
 
-        # Save image locally temporarily (to open with OpenCV)
-        image.save(file_path)
-
-        img = cv2.imread(file_path, cv2.IMREAD_GRAYSCALE)
-        mean = cv2.mean(img)[0] # The mean grayscale value of this image
         rows.append({
             "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
-            "grayscale": mean,
+            "grayscale": 0,
             "category": category
         })
-
-        # Delete temp file
-        os.unlink(file_path)
     
     # Add images to database
     supabase.table("images").insert(rows).execute()
+
+    socketio.emit(f"add image {category}", {
+        "images": [row["url"] for row in rows]
+    })
     
     return {"success": True}
 
@@ -74,38 +69,22 @@ def get_images():
     
     category_id = int(request.args["category"])
     
-    sb_data = supabase.table("images").select("grayscale, url").eq("category", category_id).order("id", desc=False).execute().data
-    available_images = list(map(lambda x: [x["grayscale"], x["url"]], sb_data))
+    images_data = supabase.table("images").select("url").eq("category", category_id).order("id", desc=False).execute().data
+    image_urls = [image.url for image in images_data]
 
-    desired_image_url = supabase.table("categories").select("desired_image_url").eq("id", category_id).execute().data[0]["desired_image_url"]
-    
-    res = requests.get(desired_image_url, stream=True)
-    temp_filename = desired_image_url.rsplit("/", 1)[1]
-    with open(temp_filename, "wb") as f:
-        res.raw.decode_content = True
-        shutil.copyfileobj(res.raw, f)
-    
-    desired_image = cv2.imread(temp_filename)
-    
-    # Resize the desired image to be a square with a number of pixels <= the number of uploaded images
-    max_size = int(sqrt(len(available_images))) # The side length
-    max_length = max_size * max_size # The # of pixels
-    rs = cv2.resize(desired_image, (max_size, max_size))
-
-    # Sort the desired image pixels and the available images by grayscale value (while also storing each grayscale value's corresponding URL/index).
-    sorted_desired = sorted([(val.item(), i) for i, val in enumerate(rs.flatten()[:max_length])], key=lambda x: x[0])
-    sorted_available = sorted(available_images, key=lambda x: x[0])[:max_length]
-
-    # Put the URLs of the available image in the appropriate order
-    urls = [""] * (max_size * max_size)
-    for _, i in sorted_desired:
-        urls[i] = sorted_available[i][1]
-    
-    # Delete temp file
-    os.unlink(temp_filename)
+    big_image_url = supabase.table("categories").select("desired_image_url").eq("id", category_id).execute().data[0]["desired_image_url"]
     
     return {
-        "urls": urls,
-        "size": max_size
+        "album_images": image_urls,
+        "big_image": big_image_url
     }
 
+socketio = SocketIO(app)
+
+@socketio.on("add image")
+def handle_json(json):
+    # print("test")
+    socketio.emit("add image", json)
+
+if __name__ == "__main__":
+    socketio.run(app, port=5001)

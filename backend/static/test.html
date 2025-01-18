@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <button onclick="socket.emit('add image', {data: 'yo'})">Send message</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io("http://127.0.0.1:5001");
+    socket.on('connect', function() {
+        socket.emit('update image', {data: 'I\'m connected!'});
+    });
+
+    socket.on('add image 1', function(msg) {
+        // console.log(msg)
+        document.body.innerHTML += msg.images.map((img) => `<img src="${img}" width="200" height="200" />`).join("\n");
+    });
+</script>
+</body>
+</html>

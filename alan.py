@@ -1,4 +1,5 @@
 from flask import abort, Flask, request
+from flask_socketio import emit, SocketIO
 from werkzeug.utils import secure_filename
 import os
 import boto3
@@ -63,6 +64,10 @@ def upload_images():
         mycursor.execute(sql, val)
 
     mydb.commit()
+
+    socketio.emit(f"add image {category}", {
+        "images": [row["url"] for row in rows]
+    })
     
     return {"success": True}
 
@@ -87,3 +92,8 @@ def get_images():
         "album_images": image_urls,
         "big_image": big_image_url
     }
+
+socketio = SocketIO(app)
+
+if __name__ == "__main__":
+    socketio.run(app, port=5000)
