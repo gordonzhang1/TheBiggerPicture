@@ -58,7 +58,7 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
     <button @click="logOut">Log Out</button>
     <RouterLink to="/dashboard">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
-    <h1>{{user.email}}</h1>
+    <h1>{{user? user.email : null}}</h1>
     
   </nav>
   <RouterView class="router-view" />

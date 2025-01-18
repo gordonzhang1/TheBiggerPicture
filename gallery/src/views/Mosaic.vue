@@ -1,43 +1,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
   "https://placehold.co/600x600",
   "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
-  "https://placehold.co/600x600",
   // Add more image URLs as needed
 ]);
+
+const showModal = ref(false); // Control the modal visibility
+const emailInput = ref(""); // Store email input
+
+
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
@@ -81,6 +57,24 @@ async function handleFileUpload(event: Event) {
     }
   }
 }
+function collab() {
+  showModal.value = true; // Show the modal when "Collaborate" is clicked
+}
+
+function closeModal() {
+  showModal.value = false; // Close the modal without sending an invite
+}
+
+function sendInvite() {
+  var socket = io("http://127.0.0.1:5001");
+
+  console.log("Sending:", images);
+
+  socket.on(`add image `, function(images) {
+        // console.log(msg)
+        // document.body.innerHTML += msg.images.map((img) => `<img src="${img}" width="200" height="200" />`).join("\n");
+    });
+}
 </script>
 
 <template>
@@ -107,12 +101,30 @@ async function handleFileUpload(event: Event) {
         <div class="generate">Generate Image</div>
         <img class="mosaicpicture" src="https://placehold.co/600x600" />
         <div class="bottom-buttons">
-          <div class="collab">Collaborate</div>
+          <button class="collab" @click="collab">Collaborate</button>
           <div class="slide">Start Slideshow</div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal for Invite -->
+  <div v-if="showModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Invite Collaborators</h2>
+      <input
+        v-model="emailInput"
+        type="email"
+        placeholder="Enter email address"
+        class="email-input"
+      />
+      <div class="modal-buttons">
+        <button @click="sendInvite" class="invite-btn">Send Invite</button>
+        <button @click="closeModal" class="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <style>
@@ -198,5 +210,26 @@ async function handleFileUpload(event: Event) {
   border: 1px solid white;
   padding: 17px;
   text-align: center;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Transparent background */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px; /* You can adjust the width of the modal */
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow to make it stand out */
 }
 </style>
