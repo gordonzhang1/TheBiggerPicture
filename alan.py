@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from flask import abort, Flask, request
 from flask_socketio import emit, SocketIO
 from werkzeug.utils import secure_filename
@@ -6,6 +7,8 @@ import boto3
 from uuid import uuid4
 import random
 import mysql.connector
+
+load_dotenv()
 
 UPLOAD_FOLDER = ""
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -45,11 +48,11 @@ def upload_images():
         extension = filename.rsplit('.', 1)[1].lower()
         stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
 
-        # s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=image)
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=image)
 
         rows.append({
-            # "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
-            "url": stored_filename,
+            "url": os.getenv("S3_BUCKET_BASE_URL") + stored_filename,
+            # "url": stored_filename,
             "category": category,
             "id": random.randint(0, 2000000000) #change so no collision
         })
