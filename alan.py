@@ -1,4 +1,5 @@
 from flask import abort, Flask, request
+from flask_socketio import emit, SocketIO
 from werkzeug.utils import secure_filename
 import os
 import boto3
@@ -7,7 +8,7 @@ import random
 import mysql.connector
 
 UPLOAD_FOLDER = ""
-ALLOWED_EXTENSIONS = {"png", "jpg"}
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -25,7 +26,6 @@ mycursor = mydb.cursor()
 def valid_image(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 @app.post("/api/upload-images")
 def upload_images():
     """POST endpoint that uploads the given images to the S3 bucket and SQL database."""
@@ -36,7 +36,6 @@ def upload_images():
     images = request.files.getlist("images")
     category = request.form["category"]
     rows = []
-
     for _, image in enumerate(images):
         filename = secure_filename(image.filename)
 
@@ -63,6 +62,10 @@ def upload_images():
         mycursor.execute(sql, val)
 
     mydb.commit()
+
+    socketio.emit(f"add image {category}", {
+        "images": [row["url"] for row in rows]
+    })
     
     return {"success": True}
 
@@ -122,3 +125,9 @@ def delete_image():
     
     return {"success": True}
 
+
+
+socketio = SocketIO(app)
+
+if __name__ == "__main__":
+    socketio.run(app, port=5001)
