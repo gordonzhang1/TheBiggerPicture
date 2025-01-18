@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
-import HelloWorld from './components/HelloWorld.vue';
-import TheWelcome from './components/TheWelcome.vue';
+import { RouterLink, RouterView } from "vue-router";
+import HelloWorld from "./components/HelloWorld.vue";
+import TheWelcome from "./components/TheWelcome.vue";
 </script>
 
 <template>
@@ -9,11 +9,7 @@ import TheWelcome from './components/TheWelcome.vue';
     <RouterLink to="/">DASHBOARD</RouterLink>
     <RouterLink to="/mosaic">MOSAIC</RouterLink>
   </nav>
-  <HelloWorld class="hello-world">
-      <RouterView class="router-view" />
-  </HelloWorld>
-  <TheWelcome>
-  </TheWelcome>
+  <RouterView />
 </template>
 
 <style scoped>
