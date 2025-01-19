@@ -13,6 +13,7 @@ const showModal = ref(false); // Control the modal visibility
 const emailInput = ref(""); // Store email input
 const showDalleModal = ref(false); // Control the modal visibility
 const dalleInput = ref(""); // Store email input
+import { socket } from "@/socket";
   
 // Define route props for the ID
 const props = defineProps({
@@ -21,6 +22,8 @@ const props = defineProps({
     required: true,
   },
 });
+
+const bigImage = ref("");
 
 async function fetchData() {
   const formData = new FormData();
@@ -35,14 +38,24 @@ async function fetchData() {
   const json = await res.json();
 
   images.value = json.album_images;
+  bigImage.value = json.big_image;
 }
 
 onMounted(() => {
   fetchData();
 });
 
-function removeImage(index: number) {
-  images.value.splice(index, 1);
+async function removeImage(url: string) {
+  // images.value.splice(index, 1);
+
+  const formData = new FormData();
+  formData.append('url', url);
+  formData.append('category', props.id);
+
+  const res = await fetch('http://127.0.0.1:5001/api/delete-image', {
+    method: 'POST',
+    body: formData
+  });
 }
 async function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -140,17 +153,17 @@ function sendInvite() {
     });
 }
 
-const shuffle = (array: string[]) => { 
-    return array.map((a) => ({ sort: Math.random(), value: a }))
-        .sort((a, b) => a.sort - b.sort)
-        .map((a) => a.value); 
-}; 
+const shuffle = (array: string[]) => {
+  return array.map((a) => ({ sort: Math.random(), value: a }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((a) => a.value);
+};
 
 const goodImages = ref(["https://www.nutritionadvance.com/wp-content/uploads/2023/07/whole-and-half-oranges-1024x683.jpg"]);
 
-function generate(){
+function generate() {
   goodImages.value = [];
-  while (goodImages.value.length < 400){
+  while (goodImages.value.length < 400) {
     goodImages.value = goodImages.value.concat(shuffle([...images.value]))
   }
   goodImages.value = goodImages.value.slice(0, 400);
@@ -171,6 +184,20 @@ function sendDalleRequest() {
 }
 
 const imageText = ref(""); // Store the text entered by the user
+let socket;
+onMounted(() => {
+  socket = io('http://127.0.0.1:5001');
+  console.log(socket);
+  socket.on(`add image ${props.id}`, (msg) => {
+    images.value = [...images.value, ...msg.images];
+  });
+  console.log(`delete image ${props.id}`)
+  socket.on(`delete image ${props.id}`, (msg) => {
+    console.log('test!');
+    images.value = images.value.filter((val) => val != msg.url);
+  });
+})
+
 </script>
 
 <template>
@@ -186,7 +213,7 @@ const imageText = ref(""); // Store the text entered by the user
           <div class="image-grid">
             <div v-for="(img, index) in images" :key="index" class="image-item">
             <img :src="img" :alt="'Image ' + (index + 1)" />
-            <button class="delete-btn" @click="removeImage(index)">X</button>
+            <button class="delete-btn" @click="removeImage(img)">X</button>
             </div>
           </div>
         </div>
@@ -220,9 +247,11 @@ const imageText = ref(""); // Store the text entered by the user
             </div>
           </div>
         <div class="mosaicpicture mosaic-grid">
-          <img id="main-img" src="https://alanbui1.github.io/codequest/assets/images/savio.jpg" />
+          <img id="main-img" :src="bigImage" />
           <div v-for="(img, index) in goodImages" :key="index" >
-          <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;" class="mosaic-item"/>
+
+            <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;"
+              :class="'mosaic-item fade-in' + Math.min(Math.abs(10-Math.floor(index / 20)), Math.abs(10-(index % 20)))" />
           </div>
         </div>
       <div class="bottom-buttons">
@@ -416,7 +445,8 @@ input[type="file"] {
 }
 
 .image-item {
-  position: relative; /* Allow absolute positioning of delete button */
+  position: relative;
+  /* Allow absolute positioning of delete button */
 }
 
 .image-container {
@@ -427,7 +457,8 @@ input[type="file"] {
   border-radius: 10px;
   width: 100%;
   height: auto;
-  transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+  transition: opacity 0.3s ease;
+  /* Smooth transition for hover effect */
 }
 
 .delete-btn {
@@ -443,11 +474,13 @@ input[type="file"] {
   text-align: center;
   font-size: 14px;
   cursor: pointer;
-  display: none; /* Hide by default */
+  display: none;
+  /* Hide by default */
 }
 
 .image-item:hover .delete-btn {
-  display: block; /* Show when hovering over the image */
+  display: block;
+  /* Show when hovering over the image */
 }
 
 .bottom-buttons {
@@ -510,7 +543,7 @@ input[type="file"] {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow to make it stand out */
 }
 
-#main-img{
+#main-img {
   width: 600px;
   height: 600px;
   object-fit: cover;
@@ -518,13 +551,13 @@ input[type="file"] {
   opacity: 100%;
 }
 
-.mosaicpicture{
+.mosaicpicture {
   width: 600px;
   height: 600px;
   opacity: 90%;
 }
 
-.mosaic-grid{
+.mosaic-grid {
   width: 600px;
   height: 600px;
   display: grid;
@@ -534,7 +567,7 @@ input[type="file"] {
   gap: 0;
 }
 
-.mosaic-item{
+.mosaic-item {
   display: block;
   margin: 0;
   padding: 0;
@@ -544,11 +577,75 @@ input[type="file"] {
   grid-row-gap: 0;
 }
 
-.mosaic-item img{
-  width: 100%; /* Ensure the image fills the item */
-  height: 100%; /* Maintain full height */
-  object-fit: cover; /* Ensures the image covers the entire area without distortion */
-  display: block; /* Remove any inline spacing */
+.mosaic-item img {
+  width: 100%;
+  /* Ensure the image fills the item */
+  height: 100%;
+  /* Maintain full height */
+  object-fit: cover;
+  /* Ensures the image covers the entire area without distortion */
+  display: block;
+  /* Remove any inline spacing */
+}
+
+
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    /* Start fully transparent */
+  }
+
+  60% {
+    opacity: 1;
+    /* Fully visible at halfway point */
+  }
+
+  100% {
+    opacity: 35%;
+    /* Fully transparent again */
+  }
+}
+
+.fade-in0 {
+  animation: fadeIn 1s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in1 {
+  animation: fadeIn 1.25s ease-in-out; /* 1s for fade-in1 */
+}
+
+.fade-in2 {
+  animation: fadeIn 1.5s ease-in-out; /* 2s for fade-in2 */
+}
+
+.fade-in3 {
+  animation: fadeIn 1.75s ease-in-out; /* 3s for fade-in3 */
+}
+
+.fade-in4 {
+  animation: fadeIn 2s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in5 {
+  animation: fadeIn 2.25s ease-in-out; /* 1s for fade-in1 */
+}
+
+.fade-in6 {
+  animation: fadeIn 2.5s ease-in-out; /* 2s for fade-in2 */
+}
+
+.fade-in7 {
+  animation: fadeIn 2.75s ease-in-out; /* 3s for fade-in3 */
+}
+
+.fade-in8 {
+  animation: fadeIn 3s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in9 {
+  animation: fadeIn 3.25s ease-in-out; /* 1s for fade-in1 */
 }
 
 </style>

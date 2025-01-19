@@ -7,7 +7,9 @@ import os
 import boto3
 from uuid import uuid4
 import random
+import requests
 import mysql.connector
+import openai
 
 load_dotenv()
 
@@ -19,9 +21,11 @@ cors = CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
+openai.api_key = os.getenv('OPENAI_KEY')
+
 # mydb = mysql.connector.connect(
 #   host="localhost",
-#   user="root",
+#   user="alanbui",
 #   password="uofthacks12!",
 #   database="users"
 # )
@@ -106,19 +110,18 @@ def get_images():
 
 @app.post("/api/create-category")
 def create_category():
-    # if "image_name" not in request.form or "user" not in request.form:
-    #     abort(400)
+    if "user" not in request.form:
+        abort(400)
 
-    # user = request.form["user"]
+    user = request.form["user"]
+    if "image_name" in request.form:
+        image_name = request.form["image_name"]
     
     category_id = random.randint(0, 2000000000)
 
-    # # mycursor.execute(f"SELECT MAX(id) FROM categories")
-    # # highest = mycursor.fetchall()[0][0]
-
-    # sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, \"\", %s)"
-    # val = (category_id, request.form['image_name'], user)
-    # mycursor.execute(sql, val)
+    sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, %s, %s)"
+    val = (category_id, "New Image", "", user)
+    mycursor.execute(sql, val)
 
     # mydb.commit()
     
@@ -127,15 +130,20 @@ def create_category():
 
 @app.post("/api/delete-image")
 def delete_image():
-    if "id" not in request.form:
+    if "url" not in request.form or 'category' not in request.form:
         abort(400)
 
-    image_id = request.form['id']
+    image_url = request.form['url']
+    category = request.form['category']
 
-    sql = f"DELETE FROM images WHERE id={image_id}"
+    sql = f"DELETE FROM images WHERE url=\"{image_url}\""
     mycursor.execute(sql)
 
     mydb.commit()
+    print(f"delete image ${category}")
+    socketio.emit(f"delete image {category}", {
+        "url": image_url
+    })
     
     return {"success": True}
 
@@ -167,8 +175,65 @@ def get_mosaics():
         "urls": urls
     }
 
+@app.post('/api/generate-dalle')
+def generate_dalle():
+    category_id = request.form["category_id"]
+    if "prompt" in request.form and request.form["prompt"] != "":
+        user_prompt = request.form["prompt"]
+        
+        response = openai.Image.create(
+            prompt=user_prompt,
+            n=1,  # Number of images to generate
+            size="1024x1024"  # Image size (can be "256x256", "512x512", or "1024x1024")
+        )
 
-socketio = SocketIO(app)
+        url = response['data'][0]['url']
+
+        res = requests.get(url, stream=True)
+        data = res.raw.read()
+
+        stored_filename = f"{uuid4()}.png" # for S3, to ensure unique filename
+
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=data)
+
+        s3_url = os.getenv("S3_BUCKET_BASE_URL") + stored_filename
+
+        sql = f"UPDATE categories SET url = '{s3_url}' WHERE id = '{category_id}'"
+
+        # sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
+
+        mycursor.execute(sql)
+
+        mydb.commit()
+
+        return {"url": s3_url}
+
+    return {"url": ""}
+
+@app.post('/api/upload_big_image')
+def upload_big():
+    if "category_id" in request.form and "file" in request.files:
+        category_id = request.form["category_id"]
+        file = request.files.getlist('file')[0]
+
+        extension = file.name.rsplit('.', 1)[1].lower()
+        stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
+
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=file)
+
+        url = os.getenv("S3_BUCKET_BASE_URL") + stored_filename
+
+        sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
+
+        mycursor.execute(sql)
+        mydb.commit()
+        
+        return {"url": url}
+    
+    return {"url": ""}
+
+socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173"])
 
 if __name__ == "__main__":
-    socketio.run(app, port=5001)
+    print("RUNNING")
+    socketio.run(app, port=5001,allow_unsafe_werkzeug=True)
