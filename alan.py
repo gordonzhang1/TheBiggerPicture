@@ -7,6 +7,7 @@ import os
 import boto3
 from uuid import uuid4
 import random
+import requests
 import mysql.connector
 import openai
 
@@ -188,13 +189,24 @@ def generate_dalle():
 
         url = response['data'][0]['url']
 
-        sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
+        res = requests.get(url, stream=True)
+        data = res.raw.read()
+
+        stored_filename = f"{uuid4()}.png" # for S3, to ensure unique filename
+
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=data)
+
+        s3_url = os.getenv("S3_BUCKET_BASE_URL") + stored_filename
+
+        sql = f"UPDATE categories SET url = '{s3_url}' WHERE id = '{category_id}'"
+
+        # sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
 
         mycursor.execute(sql)
 
         mydb.commit()
 
-        return {"url": url}
+        return {"url": s3_url}
 
     return {"url": ""}
 
