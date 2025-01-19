@@ -32,7 +32,7 @@ async function fetchData() {
 
   formData.append('category', props.id);
 
-  const res = await fetch('http://127.0.0.1:5001/api/get-images', {
+  const res = await fetch('https://uofthacks-12.onrender.com/api/get-images', {
     method: 'POST',
     body: formData,
   });
@@ -54,7 +54,7 @@ async function removeImage(url: string) {
   formData.append('url', url);
   formData.append('category', props.id);
 
-  const res = await fetch('http://127.0.0.1:5001/api/delete-image', {
+  const res = await fetch('https://uofthacks-12.onrender.com/api/delete-image', {
     method: 'POST',
     body: formData
   });
@@ -95,7 +95,7 @@ async function handleFileUpload(event: Event) {
     // Send the files to the backend
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5001/api/upload-images",
+        "https://uofthacks-12.onrender.com/api/upload-images",
         formData,
         {
           headers: {
@@ -130,7 +130,7 @@ async function handleBigFileUpload(event: Event) {
     // Send the files to the backend
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5001/api/upload_big_image",
+        "https://uofthacks-12.onrender.com/api/upload_big_image",
         formData,
         {
           headers: {
@@ -147,7 +147,8 @@ async function handleBigFileUpload(event: Event) {
 }
 
 function collab() {
-  showModal.value = true; // Show the modal when "Collaborate" is clicked
+  navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([window.location.href], { type: 'text/plain' }) })]);
+  // showModal.value = true; // Show the modal when "Collaborate" is clicked
 }
 
 function closeModal() {
@@ -155,7 +156,7 @@ function closeModal() {
 }
 
 function sendInvite() {
-  var socket = io("http://127.0.0.1:5001");
+  var socket = io("https://uofthacks-12.onrender.com");
 
   console.log("Sending:", images);
 
@@ -175,10 +176,13 @@ const goodImages: any = ref([]);
 
 function generate() {
   goodImages.value = [];
-  while (goodImages.value.length < 400) {
+  setTimeout(() => {
+    while (goodImages.value.length < 400) {
     goodImages.value = goodImages.value.concat(shuffle([...images.value]))
   }
   goodImages.value = goodImages.value.slice(0, 400);
+  }, 0)
+  
 };
 
 function dalle(){
@@ -208,7 +212,7 @@ async function sendDalleRequest() {
   formData.append("category_id", props.id);
   try {
       const response = await axios.post(
-        "http://127.0.0.1:5001/api/generate-dalle",
+        "https://uofthacks-12.onrender.com/api/generate-dalle",
         formData,
         {
           headers: {
@@ -230,7 +234,7 @@ async function sendTitleRequest() {
 const imageText = ref(""); // Store the text entered by the user
 let socket;
 onMounted(() => {
-  socket = io('http://127.0.0.1:5001');
+  socket = io('https://uofthacks-12.onrender.com');
   console.log(socket);
   socket.on(`add image ${props.id}`, (msg) => {
     images.value = [...images.value, ...msg.images];
@@ -659,8 +663,8 @@ input[type="file"] {
   display: block;
   margin: 0;
   padding: 0;
-  opacity: 35%;
-  /* mix-blend-mode: overlay; */
+  opacity: 60%;
+  mix-blend-mode: overlay; 
   grid-column-gap: 0;
   grid-row-gap: 0;
 }
