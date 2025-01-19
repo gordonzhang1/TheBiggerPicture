@@ -125,7 +125,7 @@ def create_category():
     category_id = random.randint(0, 2000000000)
 
     sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, %s, %s)"
-    val = (category_id, "New Image", "", user)
+    val = (category_id, "New Image", "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=", user)
     mycursor.execute(sql, val)
 
     # mydb.commit()
@@ -210,6 +210,10 @@ def generate_dalle():
         mycursor.execute(sql)
 
         mydb.commit()
+
+        socketio.emit(f"edit big image {category_id}", {
+            "url": s3_url
+        })
 
         return {"url": s3_url}
 
