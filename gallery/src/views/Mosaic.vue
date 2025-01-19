@@ -48,6 +48,8 @@ const images = ref([
   // Add more image URLs as needed
 ]);
 
+const bigImage = ref("");
+
 async function fetchData() {
   const formData = new FormData();
 
@@ -61,6 +63,7 @@ async function fetchData() {
   const json = await res.json();
 
   images.value = json.album_images;
+  bigImage.value = json.big_image;
 }
 
 onMounted(() => {
@@ -152,7 +155,7 @@ function generate(){
       <div class="right-center">
         <div class="generate" @click="generate()">Generate Image</div>
         <div class="mosaicpicture mosaic-grid">
-          <img id="main-img" src="https://alanbui1.github.io/codequest/assets/images/savio.jpg" />
+          <img id="main-img" :src="bigImage" />
           <div v-for="(img, index) in goodImages" :key="index" >
 
             <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;" class="mosaic-item"/>
