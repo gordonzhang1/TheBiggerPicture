@@ -145,7 +145,8 @@ async function handleBigFileUpload(event: Event) {
 }
 
 function collab() {
-  showModal.value = true; // Show the modal when "Collaborate" is clicked
+  navigator.clipboard.write([new ClipboardItem({ 'text/plain': new Blob([window.location.href], { type: 'text/plain' }) })]);
+  // showModal.value = true; // Show the modal when "Collaborate" is clicked
 }
 
 function closeModal() {
