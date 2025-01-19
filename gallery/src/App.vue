@@ -77,8 +77,8 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
 
 <template>
   <nav class="nav">
-    <RouterLink to="/dashboard" @click="login">Log in</RouterLink>
-    <button @click="logOut">Log Out</button>
+    <RouterLink v-if="!isAuthenticated" to="/dashboard" @click="login">Log in</RouterLink>
+    <a href="#" v-if="isAuthenticated" @click="logOut">Log Out</a>
     <RouterLink to="/dashboard">DASHBOARD</RouterLink>
     <a @click="createNewMosaic" class="manual-router-link">MOSAIC</a>
     <h1>{{user.email}}</h1>
