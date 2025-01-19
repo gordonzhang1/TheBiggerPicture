@@ -11,15 +11,21 @@ const router = createRouter({
       props: true, // Automatically pass the route params as props to the component
     },
     {
+      path: '/mosaic/:id', // Dynamic route with item ID
+      name: 'mosaic',
+      component: () => import('../views/Mosaic.vue'), // Replace with your ItemDetail component
+      props: true, // Automatically pass the route params as props to the component
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/Dashboard.vue'),
     },
-    {
-      path: '/mosaic',
-      name: 'mosaic',
-      component: () => import('../views/Mosaic.vue'),
-    }
+    // {
+    //   path: '/mosaic',
+    //   name: 'mosaic',
+    //   component: () => import('../views/Mosaic.vue'),
+    // }
   ],
 });
 

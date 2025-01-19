@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, defineProps, computed } from "vue";
 import axios from "axios";
+import { backendData } from "@/stores/backend-data";
+  
+// Define route props for the ID
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
@@ -38,6 +47,29 @@ const images = ref([
   // "https://placehold.co/600x600",
   // Add more image URLs as needed
 ]);
+
+const bigImage = ref("");
+
+async function fetchData() {
+  const formData = new FormData();
+
+  formData.append('category', props.id);
+
+  const res = await fetch('http://127.0.0.1:5001/api/get-images', {
+    method: 'POST',
+    body: formData,
+  });
+
+  const json = await res.json();
+
+  images.value = json.album_images;
+  bigImage.value = json.big_image;
+}
+
+onMounted(() => {
+  fetchData();
+});
+
 function removeImage(index: number) {
   images.value.splice(index, 1);
 }
@@ -46,7 +78,7 @@ async function handleFileUpload(event: Event) {
   if (input?.files) {
     const fileList = input.files;
     const formData = new FormData(); // Create FormData to hold files
-    formData.set("category", 1);
+    formData.append("category", props.id);
 
     // Loop through the selected files
     for (let i = 0; i < fileList.length; i++) {
@@ -117,9 +149,8 @@ function generate() {
       <div class="right-center">
         <div class="generate" @click="generate()">Generate Image</div>
         <div class="mosaicpicture mosaic-grid">
-          <img id="main-img"
-            src="https://thumbs.dreamstime.com/b/man-standing-front-white-background-man-standing-front-white-background-high-quality-photo-240221658.jpg" />
-          <div v-for="(img, index) in goodImages" :key="index">
+          <img id="main-img" :src="bigImage" />
+          <div v-for="(img, index) in goodImages" :key="index" >
 
             <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;"
               :class="'mosaic-item fade-in' + Math.min(Math.abs(10-Math.floor(index / 20)), Math.abs(10-(index % 20)))" />

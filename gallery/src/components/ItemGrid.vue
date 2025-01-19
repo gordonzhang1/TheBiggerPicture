@@ -40,7 +40,7 @@ const filteredItems = computed(() => {
       <RouterLink
         v-for="(item, index) in backendData.mosaics as any"
         :key="index"
-        :to="{ name: 'item-detail', params: { id: item.id } }" 
+        :to="{ name: 'mosaic', params: { id: item.id } }" 
         class="grid-item-link"
       >
         <div class="grid-item">
