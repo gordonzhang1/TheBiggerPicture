@@ -245,7 +245,7 @@ def upload_big():
     
     return {"url": ""}
 
-socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://localhost:5174"])
+socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://localhost:5174", "https://uofthacks-12.vercel.app"])
 
 if __name__ == "__main__":
     print("RUNNING")
