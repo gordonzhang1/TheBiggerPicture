@@ -23,6 +23,7 @@ const props = defineProps({
 });
 
 const bigImage = ref("");
+const hoveredImage = ref<string>("")
 
 async function fetchData() {
   const formData = new FormData();
@@ -56,6 +57,16 @@ async function removeImage(url: string) {
     body: formData
   });
 }
+
+// Hover functions to update preview
+const handleImageHover = (imageUrl: string) => {
+  hoveredImage.value = imageUrl; // Set the hovered image to display as preview
+};
+
+const handleImageLeave = () => {
+  hoveredImage.value = ""; // Reset to default image when mouse leaves
+};
+
 async function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input?.files) {
@@ -227,14 +238,15 @@ onMounted(() => {
     <!-- Placeholder for an image -->
     <div class="placeholder-container">
       <!-- Optionally, add a placeholder image -->
-      <img src="https://placehold.co/600x400" alt="Placeholder Image" />
+      <img :src="hoveredImage || 'https://placehold.co/600x400'" alt="Placeholder Image" />
     
 
       <div class="uploadbigcon">
         <div class="uploadcon">
           <div class="image-grid">
             <div v-for="(img, index) in images" :key="index" class="image-item">
-            <img :src="img" :alt="'Image ' + (index + 1)" />
+            <img :src="img" :alt="'Image ' + (index + 1)" 
+            />
             <button class="delete-btn" @click="removeImage(img)">X</button>
             </div>
           </div>
@@ -273,7 +285,10 @@ onMounted(() => {
           <div v-for="(img, index) in goodImages" :key="index" >
 
             <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;"
-              :class="'mosaic-item fade-in' + Math.min(Math.abs(10-Math.floor(index / 20)), Math.abs(10-(index % 20)))" />
+              :class="'mosaic-item fade-in' + Math.min(Math.abs(10-Math.floor(index / 20)), Math.abs(10-(index % 20)))"
+              @mouseover="handleImageHover(img)" 
+            @mouseleave="handleImageLeave"
+            />
           </div>
         </div>
       <div class="bottom-buttons">
