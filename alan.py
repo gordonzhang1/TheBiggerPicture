@@ -31,11 +31,11 @@ openai.api_key = os.getenv('OPENAI_KEY')
 # )
 
 mydb = mysql.connector.connect(
-  host=os.getenv('HOST'),
+  host=os.getenv('SQLHOST'),
   user=os.getenv('USER'),
   password=os.getenv('PASSWORD'),
   database=os.getenv('DATABASE'),
-  port=os.getenv('PORT')
+  port=os.getenv('SQLPORT')
 )
 
 mycursor = mydb.cursor()
