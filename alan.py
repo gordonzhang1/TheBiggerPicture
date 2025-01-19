@@ -236,4 +236,4 @@ socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173"])
 
 if __name__ == "__main__":
     print("RUNNING")
-    socketio.run(app, port=5001,allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=5001,allow_unsafe_werkzeug=True)
