@@ -32,7 +32,7 @@ openai.api_key = os.getenv('OPENAI_KEY')
 
 mydb = mysql.connector.connect(
   host=os.getenv('HOST'),
-  user=os.getenv('USER'),
+  user="doadmin",
   password=os.getenv('PASSWORD'),
   database=os.getenv('DATABASE'),
   port=os.getenv('PORT')
@@ -153,7 +153,7 @@ def get_mosaics():
         abort(400)
 
     userid = request.form['user']
-
+    
     sql = f"SELECT * FROM categories WHERE user=\"{userid}\""
     # val = (userid,)
 
@@ -232,7 +232,7 @@ def upload_big():
     
     return {"url": ""}
 
-socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173"])
+socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://localhost:5174"])
 
 if __name__ == "__main__":
     print("RUNNING")
