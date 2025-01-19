@@ -26,15 +26,15 @@
 <br />
 <div align="center">
 
-<h1 align="center">Picture</h1>
+<h1 align="center">The Bigger Picture</h1>
 
   <p align="center">
-    Helping you see the bigger picture
+    Helping you appreciate the little things in life.
     <br />
-    <a href="https://www.youtube.com/watch?v=WyINpCzZDsw" target="_blank"><strong>View Demo »</strong></a>
+    <a href="https://youtu.be/EpfvE0dZnCM" target="_blank"><strong>View Demo »</strong></a>
     <br />
     <br />
-    <a href="https://www.shakespeareai.ca">Visit Website</a>
+    <a href="https://uofthacks-12.vercel.app/">Visit Website</a>
   </p>
 </div>
 
@@ -48,8 +48,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-  <a href="https://github.com/gordonzhang1/ShakespeareAI">
-    <img src="https://www.gordonzhang.ca/assets/WhaleBeing-CMRDC8OQ.png" alt="Logo" width="1000" height="auto">
+  <a href="https://github.com/Raptors65/uofthacks-12">
+    <img src="logo.png" alt="Logo" width="200" height="auto">
   </a>
   <p> People often clutter their camera roll with thousands of pictures they will never see. Our project allows people to see a collection of their photos in the form of a photo mosaic, letting them see the "bigger" picture made of their "littler" pictures.   
   
@@ -85,7 +85,6 @@ Uploaded images are securely stored in our Amazon S3 database and can be queried
 
 
 ### Deployed With
-* [![Azure][Azure]][Azure-url]
 * [![Vercel][Vercel]][Vercel-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -94,7 +93,7 @@ Uploaded images are securely stored in our Amazon S3 database and can be queried
 <!-- GETTING STARTED -->
 ## Getting Started
 
-<p>Want to try seeing the bigger picture? Go to <a href="https://www.whalebeing.co/">www.whalebeing.ca</a> login and upload away!</p>
+<p>Want to try seeing the bigger picture? Go to <a href="https://uofthacks-12.vercel.app/">https://uofthacks-12.vercel.app/</a> login and upload away!</p>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
