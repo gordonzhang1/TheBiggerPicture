@@ -38,7 +38,7 @@ async function createNewMosaic() {
   formData.append('image_name', 'New Mosaic');
   formData.append('user', user.value.email);
 
-  const res = await fetch('http://127.0.0.1:5001/api/create-category', {
+  const res = await fetch('https://uofthacks-12.onrender.com/api/create-category', {
     method: 'POST',
     body: formData
   });
@@ -60,7 +60,7 @@ async function fetchData(email: string | undefined) {
 
   data.append('user', email);
 
-  const res = await fetch('http://127.0.0.1:5001/api/get-mosaics', {
+  const res = await fetch('https://uofthacks-12.onrender.com/api/get-mosaics', {
     method: 'POST',
     body: data
   });
