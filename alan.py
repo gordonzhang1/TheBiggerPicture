@@ -8,6 +8,7 @@ import boto3
 from uuid import uuid4
 import random
 import mysql.connector
+import openai
 
 load_dotenv()
 
@@ -19,9 +20,11 @@ cors = CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
+openai.api_key = os.getenv('OPENAI_KEY')
+
 mydb = mysql.connector.connect(
   host="localhost",
-  user="root",
+  user="alanbui",
   password="uofthacks12!",
   database="users"
 )
@@ -110,14 +113,34 @@ def create_category():
         abort(400)
 
     user = request.form["user"]
+    image_name = request.form["image_name"]
     
     category_id = random.randint(0, 2000000000)
+
+    url = "/"
+
+    if "prompt" in request.form and request.form["prompt"] != "":
+        user_prompt = request.form["prompt"]
+        
+        response = openai.Image.create(
+            prompt=user_prompt,
+            n=1,  # Number of images to generate
+            size="1024x1024"  # Image size (can be "256x256", "512x512", or "1024x1024")
+        )
+
+        url = response['data'][0]['url']
+
+    elif "upload_image" in request.files:
+        #lucas do this please
+        #save to s3 and set url = the s3 url
+        pass
+
 
     # mycursor.execute(f"SELECT MAX(id) FROM categories")
     # highest = mycursor.fetchall()[0][0]
 
-    sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, \"\", %s)"
-    val = (category_id, request.form['image_name'], user)
+    sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, %s, %s)"
+    val = (category_id, image_name, url, user)
     mycursor.execute(sql, val)
 
     mydb.commit()
@@ -171,4 +194,5 @@ def get_mosaics():
 socketio = SocketIO(app)
 
 if __name__ == "__main__":
+    print("RUNNING")
     socketio.run(app, port=5001)
