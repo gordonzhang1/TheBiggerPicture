@@ -26,7 +26,7 @@ const filteredItems = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="grid-container">
     <!-- Search bar -->
     <input 
       v-model="searchQuery" 
@@ -38,7 +38,7 @@ const filteredItems = computed(() => {
     <!-- Grid of items -->
     <div class="grid-items">
       <RouterLink
-        v-for="(item, index) in backendData.mosaics as any"
+        v-for="(item, index) in backendData.mosaics.filter((m: any) => m.image_name.toLowerCase().includes(searchQuery.toLowerCase())) as any"
         :key="index"
         :to="{ name: 'mosaic', params: { id: item.id } }" 
         class="grid-item-link"
@@ -59,6 +59,10 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+.grid-container {
+  width: 100%;
 }
 
 /* Search bar styling */
@@ -84,18 +88,23 @@ html, body {
 
 /* Grid container styling */
 .grid-items {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
   gap: 2rem;
   padding: 1rem;
+  justify-content: space-around;
   width: 100%; /* Ensure it takes full width */
   height: 400px; /* Full screen height */
   box-sizing: border-box; /* Include padding in the width/height calculation */
+  margin-bottom: 500px;
 }
 
 /* Individual grid item styling */
 .grid-item {
   display: flex;
+  width: 15vw;
+  height: 100%;
   flex-direction: column;
   align-items: center;
   background-color: #6e6e6e2c;
@@ -108,6 +117,7 @@ html, body {
 
 .grid-item-image {
   max-width: 100%;
+  max-height: 100%;
   border-radius: 15px;
 }
 
