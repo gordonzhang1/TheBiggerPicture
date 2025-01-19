@@ -29,16 +29,12 @@
 <h1 align="center">Picture</h1>
 
   <p align="center">
-    Full-Stack dynamic AI Prediction model for whale-ship collisions
+    Helping you see the bigger picture
     <br />
     <a href="https://www.youtube.com/watch?v=WyINpCzZDsw" target="_blank"><strong>View Demo »</strong></a>
     <br />
     <br />
     <a href="https://www.shakespeareai.ca">Visit Website</a>
-    ·
-    <a href="https://github.com/gordonzhang1/ShakespeareAI/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/gordonzhang1/ShakespeareAI/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
   </p>
 </div>
 
@@ -55,9 +51,8 @@
   <a href="https://github.com/gordonzhang1/ShakespeareAI">
     <img src="https://www.gordonzhang.ca/assets/WhaleBeing-CMRDC8OQ.png" alt="Logo" width="1000" height="auto">
   </a>
-  <p>  Up to 20,000 whales per year are killed by ships globally, posing a significant threat to already vulnerable whale populations. The issue of ship strikes is not only an tragedy for marine ecosystems but also an avoidable one: in many cases, reducing ship speeds and rerouting to avoid high-risk areas comes at little to no cost to ship operators.
-
-To change this tragedy, we built WhaleBeing. 
+  <p> People often clutter their camera roll with thousands of pictures they will never see. Our project allows people to see a collection of their photos in the form of a photo mosaic, letting them see the "bigger" picture made of their "littler" pictures.   
+  
 </p>
 
 
@@ -72,20 +67,21 @@ To change this tragedy, we built WhaleBeing.
       Database: The database is built with with SQL using (MySQL), with AWS S3 for storage. 
   </p>
   
-<p>Our application leverages WebSockets to enable live, bi-directional communication between devices. This technology ensures that updates are transmitted in real-time without the need for constant polling, significantly reducing latency and improving efficiency. When a change is made on one device, such as modifying data or triggering an action, WebSockets instantly push the update to all connected devices, ensuring synchronization across the system.
+<p>Our application leverages WebSockets to enable live, bi-directional communication between devices. This allows users to collaborate in real-time to make a mosaic together. 
 
-The WebSocket implementation is integrated with the backend (Flask) and frontend (Vue.js), using libraries such as Flask-SocketIO and corresponding client-side WebSocket APIs. </p>
+The WebSocket implementation is integrated with the backend (Flask) and frontend (Vue.js), using libraries such as Flask-SocketIO and corresponding client-side WebSocket APIs. 
+
+Uploaded images are securely stored in our Amazon S3 database and can be queried using the SQL database (made with MySQL). This allows users (who log in through Auth0 authentication) to pick up on their progress from where they last left off.
+
+</p>
 
 ### Built With
 
 * [![Vue.js][Vue.js]][Vue-url]
 * [![Flask][Flask]][Flask-url]
 * [![MySQL][MySQL]][MySQL-url]
-* [![Flask][Flask]][Flask-url]
-
-
-
-
+* [![OpenAI-API][OpenAI-API]][OpenAI-API-url]
+* [![AmazonS3][AmazonS3]][AmazonS3-url]
 
 
 ### Deployed With
@@ -94,49 +90,12 @@ The WebSocket implementation is integrated with the backend (Flask) and frontend
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Features
-<ul>
-  <li><strong>AI-Powered Whale Distribution Prediction:</strong> Built a machine learning model in Python with NumPy and Pandas to predict whale distribution patterns using open-source satellite data, providing whale presence forecasts for any day of the year.</li>
-  <li><strong>Real-Time Whale Heatmap:</strong> Integrated the machine learning model with the Mapbox API to deliver an interactive, real-time predictive whale heatmap, enhancing maritime navigation and minimizing the risk of ship strikes.</li>
-  <li><strong>Ship Strike Risk Analysis:</strong> Developed a Python-based risk-analysis algorithm in Flask to assess the probability of ship strikes with whales.</li>
-  <li><strong>Seamless Integration with Ship Route Search:</strong> Incorporated the Searoutes API to enable dynamic ship route searches, calculating risk percentages based on predicted whale presence.</li>
-
-</ul>
-And more to come! 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-<p>Want to try WhaleBeing out? Go to <a href="https://www.whalebeing.co/">www.whalebeing.ca</a> and type in 9455911 for the ship IMO number, and 2025/01/09 - 2025/01/11 for the dates. </p>
+<p>Want to try seeing the bigger picture? Go to <a href="https://www.whalebeing.co/">www.whalebeing.ca</a> login and upload away!</p>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-
-
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 
 <!-- CONTACT -->
@@ -144,7 +103,7 @@ Don't forget to give the project a star! Thanks again!
 
 Gordon Zhang - g234zhan@uwaterloo.ca
 
-Project Link: [https://github.com/gordonzhang1/WhaleBeing](https://github.com/gordonzhang1/WhaleBeing)
+Project Link: [https://github.com/Raptors65/uofthacks-12](https://github.com/Raptors65/uofthacks-12)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -235,4 +194,5 @@ Project Link: [https://github.com/gordonzhang1/WhaleBeing](https://github.com/go
 [MySQL]: https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white
 [MySQL-url]: https://www.mysql.com/
 
-
+[AmazonS3]: https://img.shields.io/badge/Amazon%20S3-red?style=for-the-badge&logo=amazon&logoColor=white
+[AmazonS3-url]: https://aws.amazon.com/s3/
