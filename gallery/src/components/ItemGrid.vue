@@ -38,7 +38,7 @@ const filteredItems = computed(() => {
     <!-- Grid of items -->
     <div class="grid-items">
       <RouterLink
-        v-for="(item, index) in backendData.mosaics.filter((m: any) => m.image_name.includes(searchQuery)) as any"
+        v-for="(item, index) in backendData.mosaics.filter((m: any) => m.image_name.toLowerCase().includes(searchQuery.toLowerCase())) as any"
         :key="index"
         :to="{ name: 'mosaic', params: { id: item.id } }" 
         class="grid-item-link"
