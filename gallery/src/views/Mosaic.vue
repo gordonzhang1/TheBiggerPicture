@@ -158,7 +158,7 @@ const shuffle = (array: string[]) => {
     .map((a) => a.value);
 };
 
-const goodImages = ref(["https://www.nutritionadvance.com/wp-content/uploads/2023/07/whole-and-half-oranges-1024x683.jpg"]);
+const goodImages: any = ref([]);
 
 function generate() {
   goodImages.value = [];
