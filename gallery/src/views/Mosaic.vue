@@ -13,6 +13,8 @@ const showModal = ref(false); // Control the modal visibility
 const emailInput = ref(""); // Store email input
 const showDalleModal = ref(false); // Control the modal visibility
 const dalleInput = ref(""); // Store email input
+const showTitleModal = ref(false); // Control the modal visibility
+const titleInput = ref(""); // Store email input
   
 // Define route props for the ID
 const props = defineProps({
@@ -188,6 +190,15 @@ function closedalle() {
   showDalleModal.value = false; // Close the modal without sending an invite
 }
 
+function title(){
+  console.log("title button clicked");
+  showTitleModal.value = true; // Show the modal when "Collaborate" is clicked
+}
+
+function closetitle() {
+  showTitleModal.value = false; // Close the modal without sending an invite
+}
+
 async function sendDalleRequest() {
   closedalle();
   console.log("Sending Dall-E request");
@@ -210,6 +221,10 @@ async function sendDalleRequest() {
     } catch (error) {
       console.error("Error uploading files:", error); // Handle error
     }
+}
+
+async function sendTitleRequest() {
+  console.log("Sending Title request");
 }
 
 const imageText = ref(""); // Store the text entered by the user
@@ -296,6 +311,7 @@ onMounted(() => {
       <div class="bottom-buttons">
         <button class="generate" @click="generate()">Generate Image</button>
         <button class="collab" @click="collab">Collaborate</button>
+        <button class="title" @click="title">Mosaic Title</button>
       </div>
     </div>
   </div>
@@ -335,6 +351,23 @@ onMounted(() => {
     </div>
   </div>
 
+  <!-- Modal for Title -->
+  <div v-if="showTitleModal" class="modal-overlay">
+    <div class="modal">
+      <h2>Enter Title</h2>
+      <input
+        v-model="titleInput"
+        type="text"
+        placeholder="Enter title"
+        class="email-input"
+      />
+      <div class="modal-buttons">
+        <button @click="sendTitleRequest" class="invite-btn">Send Title</button>
+        <button @click="closetitle" class="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <style>
@@ -363,6 +396,7 @@ onMounted(() => {
 }
 
 .placeholder-subcontainer img {
+  border-radius: 20px;
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ensures the image covers the entire container, keeping aspect ratio */
@@ -382,10 +416,16 @@ input[type="file"] {
   margin-top: 1rem;
   border: 1px solid #ccc;
   display: inline-block;
-  padding: 6px 12px;
+  padding: 12px 24px;
   cursor: pointer;
   background-color: #555;
   border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #666;
+  transition: all 0.3s ease;
 }
 
 .uploadbigcon {
@@ -539,7 +579,8 @@ input[type="file"] {
 }
 
 .collab,
-.generate {
+.generate,
+.title {
   border: 1px solid white;
   text-align: center;
   border-radius: 20px;
@@ -548,7 +589,8 @@ input[type="file"] {
 }
 
 .collab:hover,
-.generate:hover {
+.generate:hover,
+.title:hover {
   background-color: white;
   color: black;
   cursor: pointer;
