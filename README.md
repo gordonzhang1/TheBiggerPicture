@@ -26,7 +26,7 @@
 <br />
 <div align="center">
 
-<h1 align="center">WhaleBeing</h1>
+<h1 align="center">Picture</h1>
 
   <p align="center">
     Full-Stack dynamic AI Prediction model for whale-ship collisions
@@ -63,24 +63,26 @@ To change this tragedy, we built WhaleBeing.
 
 ## What it does, and how we built it
 </h3>
-<p>WhaleBeing uses a dynamic prediction model to display how ship routes interact with blue whale habitats using a web app.
+<p>
+  Frontend: The frontend is built with Vue.js.</p>
+  <p>
+      Backend: The backend is built with Flask. 
+  </p>
+  <p>
+      Database: The database is built with with SQL using (MySQL), with AWS S3 for storage. 
+  </p>
+  
+<p>Our application leverages WebSockets to enable live, bi-directional communication between devices. This technology ensures that updates are transmitted in real-time without the need for constant polling, significantly reducing latency and improving efficiency. When a change is made on one device, such as modifying data or triggering an action, WebSockets instantly push the update to all connected devices, ensuring synchronization across the system.
 
-The core of our maching learning model is based off a 2019 research paper published in _ Diversity and Distributions (https://onlinelibrary.wiley.com/doi/full/10.1111/ddi.12940) _, and predicts daily, year-round habitat suitability for blue whales off the coast of California. We implemented a method using a Boosted Regression Tree and candidate Generalized Additive Mixed Models to use satellite data of tracked blue whales to produce a whale distribution prediction.
-
-WhaleBeing enables users to search and visualize ship routes overlaid on our dynamic prediction heatmaps using the SeaRoutes API. Once a ship route is found, WhaleBeing calculates the likelihood of that route intersecting with areas of high blue whale activity by integrating the distribution weights along the nodes of the ship route.
-
-This calculation is pivotal in assessing the risk of ship strikes and supports proactive decision-making to mitigate such risks, ultimately aiding in the protection of this endangered species.</p>
-
-
+The WebSocket implementation is integrated with the backend (Flask) and frontend (Vue.js), using libraries such as Flask-SocketIO and corresponding client-side WebSocket APIs. </p>
 
 ### Built With
 
-* [![React][React.js]][React-url]
-* [![Python][Python]][Python-url]
+* [![Vue.js][Vue.js]][Vue-url]
 * [![Flask][Flask]][Flask-url]
-* [![NumPy][NumPy]][NumPy-url]
-* [![Pandas][Pandas]][Pandas-url]
-* [![TailwindCSS][TailwindCSS]][TailwindCSS-url]
+* [![MySQL][MySQL]][MySQL-url]
+* [![Flask][Flask]][Flask-url]
+
 
 
 
@@ -227,6 +229,10 @@ Project Link: [https://github.com/gordonzhang1/WhaleBeing](https://github.com/go
 
 [TailwindCSS]: https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
 [TailwindCSS-url]: https://tailwindcss.com/
+[Vue.js]: https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white
+[Vue-url]: https://vuejs.org/
 
+[MySQL]: https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white
+[MySQL-url]: https://www.mysql.com/
 
 
