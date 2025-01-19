@@ -109,38 +109,17 @@ def get_images():
 
 @app.post("/api/create-category")
 def create_category():
-    if "image_name" not in request.form or "user" not in request.form:
+    if "user" not in request.form:
         abort(400)
 
     user = request.form["user"]
-    image_name = request.form["image_name"]
+    if "image_name" in request.form:
+        image_name = request.form["image_name"]
     
     category_id = random.randint(0, 2000000000)
 
-    url = "/"
-
-    if "prompt" in request.form and request.form["prompt"] != "":
-        user_prompt = request.form["prompt"]
-        
-        response = openai.Image.create(
-            prompt=user_prompt,
-            n=1,  # Number of images to generate
-            size="1024x1024"  # Image size (can be "256x256", "512x512", or "1024x1024")
-        )
-
-        url = response['data'][0]['url']
-
-    elif "upload_image" in request.files:
-        #lucas do this please
-        #save to s3 and set url = the s3 url
-        pass
-
-
-    # mycursor.execute(f"SELECT MAX(id) FROM categories")
-    # highest = mycursor.fetchall()[0][0]
-
     sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, %s, %s)"
-    val = (category_id, image_name, url, user)
+    val = (category_id, "New Image", "", user)
     mycursor.execute(sql, val)
 
     mydb.commit()
@@ -190,6 +169,47 @@ def get_mosaics():
         "urls": urls
     }
 
+@app.post('/api/generate-dalle')
+def generate_dalle():
+    category_id = request.form["category_id"]
+    if "prompt" in request.form and request.form["prompt"] != "":
+        user_prompt = request.form["prompt"]
+        
+        response = openai.Image.create(
+            prompt=user_prompt,
+            n=1,  # Number of images to generate
+            size="1024x1024"  # Image size (can be "256x256", "512x512", or "1024x1024")
+        )
+
+        url = response['data'][0]['url']
+
+        sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
+
+        mycursor.execute(sql)
+
+        mydb.commit()
+
+        return {"url": url}
+
+    return {"url": ""}
+
+@app.post('/api/upload_big_image')
+def upload_big():
+    if "category_id" in request.form and "file" in request.files:
+        category_id = request.form["category_id"]
+        file = request.files.getlist('file')[0]
+
+        # save image to s3
+        url = "" # GET FROM S3
+
+        sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
+
+        mycursor.execute(sql)
+        mydb.commit()
+        
+        return {"url": url}
+    
+    return {"url": ""}
 
 socketio = SocketIO(app)
 
