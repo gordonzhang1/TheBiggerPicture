@@ -83,17 +83,17 @@ async function handleFileUpload(event: Event) {
   }
 }
 
-const shuffle = (array: string[]) => { 
-    return array.map((a) => ({ sort: Math.random(), value: a }))
-        .sort((a, b) => a.sort - b.sort)
-        .map((a) => a.value); 
-}; 
+const shuffle = (array: string[]) => {
+  return array.map((a) => ({ sort: Math.random(), value: a }))
+    .sort((a, b) => a.sort - b.sort)
+    .map((a) => a.value);
+};
 
 const goodImages = ref(["https://www.nutritionadvance.com/wp-content/uploads/2023/07/whole-and-half-oranges-1024x683.jpg"]);
 
-function generate(){
+function generate() {
   goodImages.value = [];
-  while (goodImages.value.length < 400){
+  while (goodImages.value.length < 400) {
     goodImages.value = goodImages.value.concat(shuffle([...images.value]))
   }
   goodImages.value = goodImages.value.subarray(0, 400);
@@ -111,22 +111,18 @@ function generate(){
           </div>
         </div>
       </div>
-      <input
-        type="file"
-        id="fileInput"
-        multiple
-        @change="handleFileUpload"
-        class="file-upload-input"
-      />
+      <input type="file" id="fileInput" multiple @change="handleFileUpload" class="file-upload-input" />
     </div>
     <div class="right-side-con">
       <div class="right-center">
         <div class="generate" @click="generate()">Generate Image</div>
         <div class="mosaicpicture mosaic-grid">
-          <img id="main-img" src="https://alanbui1.github.io/codequest/assets/images/savio.jpg" />
-          <div v-for="(img, index) in goodImages" :key="index" >
+          <img id="main-img"
+            src="https://thumbs.dreamstime.com/b/man-standing-front-white-background-man-standing-front-white-background-high-quality-photo-240221658.jpg" />
+          <div v-for="(img, index) in goodImages" :key="index">
 
-            <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;" class="mosaic-item"/>
+            <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;"
+              :class="'mosaic-item fade-in' + Math.min(Math.abs(10-Math.floor(index / 20)), Math.abs(10-(index % 20)))" />
           </div>
         </div>
         <div class="bottom-buttons">
@@ -143,6 +139,7 @@ function generate(){
   display: flex;
   gap: 10px;
 }
+
 .uploadcon {
   margin-top: 50px;
   height: 650px;
@@ -156,7 +153,8 @@ function generate(){
 }
 
 .image-item {
-  position: relative; /* Allow absolute positioning of delete button */
+  position: relative;
+  /* Allow absolute positioning of delete button */
 }
 
 .image-container {
@@ -166,7 +164,8 @@ function generate(){
 .image-item img {
   width: 100%;
   height: auto;
-  transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+  transition: opacity 0.3s ease;
+  /* Smooth transition for hover effect */
 }
 
 .delete-btn {
@@ -182,11 +181,13 @@ function generate(){
   text-align: center;
   font-size: 14px;
   cursor: pointer;
-  display: none; /* Hide by default */
+  display: none;
+  /* Hide by default */
 }
 
 .image-item:hover .delete-btn {
-  display: block; /* Show when hovering over the image */
+  display: block;
+  /* Show when hovering over the image */
 }
 
 .bottom-buttons {
@@ -224,7 +225,7 @@ function generate(){
   text-align: center;
 }
 
-#main-img{
+#main-img {
   width: 600px;
   height: 600px;
   object-fit: cover;
@@ -232,13 +233,13 @@ function generate(){
   opacity: 100%;
 }
 
-.mosaicpicture{
+.mosaicpicture {
   width: 600px;
   height: 600px;
   opacity: 90%;
 }
 
-.mosaic-grid{
+.mosaic-grid {
   width: 600px;
   height: 600px;
   display: grid;
@@ -248,7 +249,7 @@ function generate(){
   gap: 0;
 }
 
-.mosaic-item{
+.mosaic-item {
   display: block;
   margin: 0;
   padding: 0;
@@ -258,11 +259,75 @@ function generate(){
   grid-row-gap: 0;
 }
 
-.mosaic-item img{
-  width: 100%; /* Ensure the image fills the item */
-  height: 100%; /* Maintain full height */
-  object-fit: cover; /* Ensures the image covers the entire area without distortion */
-  display: block; /* Remove any inline spacing */
+.mosaic-item img {
+  width: 100%;
+  /* Ensure the image fills the item */
+  height: 100%;
+  /* Maintain full height */
+  object-fit: cover;
+  /* Ensures the image covers the entire area without distortion */
+  display: block;
+  /* Remove any inline spacing */
+}
+
+
+
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    /* Start fully transparent */
+  }
+
+  60% {
+    opacity: 1;
+    /* Fully visible at halfway point */
+  }
+
+  100% {
+    opacity: 35%;
+    /* Fully transparent again */
+  }
+}
+
+.fade-in0 {
+  animation: fadeIn 1s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in1 {
+  animation: fadeIn 1.25s ease-in-out; /* 1s for fade-in1 */
+}
+
+.fade-in2 {
+  animation: fadeIn 1.5s ease-in-out; /* 2s for fade-in2 */
+}
+
+.fade-in3 {
+  animation: fadeIn 1.75s ease-in-out; /* 3s for fade-in3 */
+}
+
+.fade-in4 {
+  animation: fadeIn 2s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in5 {
+  animation: fadeIn 2.25s ease-in-out; /* 1s for fade-in1 */
+}
+
+.fade-in6 {
+  animation: fadeIn 2.5s ease-in-out; /* 2s for fade-in2 */
+}
+
+.fade-in7 {
+  animation: fadeIn 2.75s ease-in-out; /* 3s for fade-in3 */
+}
+
+.fade-in8 {
+  animation: fadeIn 3s ease-in-out; /* 0s for fade-in0 */
+}
+
+.fade-in9 {
+  animation: fadeIn 3.25s ease-in-out; /* 1s for fade-in1 */
 }
 
 </style>
