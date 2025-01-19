@@ -15,6 +15,11 @@ defineProps<{
 <style scoped>
 .greetings {
   /* display text side to side */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 1rem;
   width: 100%;
 }

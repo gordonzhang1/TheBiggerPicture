@@ -81,7 +81,7 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
 <template>
   <div class="main-container">
     <!-- Show log in button only if user is not authenticated -->
-    <div v-if="!isAuthenticated" class="login-button">
+    <div class="greetings-container" v-if="!isAuthenticated">
       <div class="greetings">
      <h1>
       <strong>The Bigger Picture.</strong>
@@ -90,12 +90,12 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
         A more meaningful way to share your photos.
       </h3>
      </div>
-      <RouterLink to="/dashboard" @click="login">LOGIN</RouterLink>
+      <RouterLink class="login-button" to="/dashboard" @click="login">Log In</RouterLink>
     </div>
 
     <nav class="nav">
-      <RouterLink to="/dashboard">DASHBOARD</RouterLink>
-      <a @click="createNewMosaic" class="manual-router-link">MOSAIC</a>
+      <RouterLink to="/dashboard">Dashboard</RouterLink>
+      <a @click="createNewMosaic" class="manual-router-link">Create Mosaic</a>
       <h1>{{ user ? user.email : null }}</h1>
       <a href="#" v-if="isAuthenticated" @click="logOut">Log Out</a>
     </nav>
@@ -131,24 +131,31 @@ html {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #4c7467;
-  padding: 1rem;
+  background-color: #dad9d9;
+  padding: 0.5rem;
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
   z-index: 1000;
 }
 
-.nav a {
-  color: white;
+.nav a,
+.nav h1 {
+  font-weight: 500;
+  color: rgb(20, 20, 20);
   text-decoration: none;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
   border-radius: 4px;
   transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+
 }
 
 .nav a:hover {
-  background-color: #34495e;
+  color: #000000;
+  transition: all 0.3s ease;
+  scale: 1.02;
 }
 .router-view {
   margin-top: 2rem;
@@ -164,20 +171,16 @@ html {
   align-items: center;
   justify-content: flex-start;
   padding: 20px;
-  margin-top: 5rem;
-}
-
-.nav a, .nav h1 {
-  color: white;
 }
 
 .login-button {
   display: inline-flex;
   margin-top: 3rem;
   margin-bottom: 20px;
-  background-color: #f0f0f0; /* Add some styling to make it visible */
+  background-color: rgb(231, 231, 231);
   padding: 10px;
   border-radius: 50px;
+  color: #0c0c0c;
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
@@ -189,19 +192,30 @@ html {
 }
 
 .login-button:hover {
-  background-color: #e0e0e0;
+  background-color: rgb(190, 190, 190);
   transition: all 0.3s ease;
   scale: 1.05;
+  /* glow effect */
+  box-shadow: 0 0 30px #f0f0f08c;
+  transition: all 0.3s ease;
 } 
 
+.greetings-container {
+  margin-top: 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
 .greetings {
-  margin-top: 10%;
+  margin-top: 14%;
   display: inline-flex;
   flex-direction: column;
   font-size: 2.5rem;
   font-weight:bold;
   text-align: center;
-  color: aliceblue;
+  color: rgb(231, 231, 231);
   gap: 2rem;
   margin-bottom: 1rem;
 }

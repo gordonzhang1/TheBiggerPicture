@@ -26,7 +26,7 @@ const filteredItems = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="grid-container">
     <!-- Search bar -->
     <input 
       v-model="searchQuery" 
@@ -61,6 +61,10 @@ html, body {
   padding: 0;
 }
 
+.grid-container {
+  width: 100%;
+}
+
 /* Search bar styling */
 .search-bar {
   width: 100%;
@@ -84,10 +88,12 @@ html, body {
 
 /* Grid container styling */
 .grid-items {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
   gap: 2rem;
   padding: 1rem;
+  justify-content: space-around;
   width: 100%; /* Ensure it takes full width */
   height: 400px; /* Full screen height */
   box-sizing: border-box; /* Include padding in the width/height calculation */
@@ -97,6 +103,8 @@ html, body {
 /* Individual grid item styling */
 .grid-item {
   display: flex;
+  width: 15vw;
+  height: 100%;
   flex-direction: column;
   align-items: center;
   background-color: #6e6e6e2c;
@@ -109,6 +117,7 @@ html, body {
 
 .grid-item-image {
   max-width: 100%;
+  max-height: 100%;
   border-radius: 15px;
 }
 

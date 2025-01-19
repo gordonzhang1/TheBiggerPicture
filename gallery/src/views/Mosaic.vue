@@ -400,12 +400,12 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   width: 600px;
-  border: 1px dashed gray;
   border-radius: 20px;
   margin-bottom: 20px; /* Space between placeholder and uploadbigcon */
-  background-color: rgb(240, 240, 240); /* Light gray background */
+  background-color: #c9c9c9; /* Light gray background */
   gap: 20px;
   padding: 20px;
+  /*add glow effect*/
 }
 
 .placeholder-subcontainer {
@@ -446,7 +446,7 @@ input[type="file"] {
 }
 
 .custom-file-upload:hover {
-  background-color: #666;
+  background-color: #dad9d9;
   transition: all 0.3s ease;
 }
 
@@ -457,8 +457,8 @@ input[type="file"] {
   justify-content: flex-start; /* Ensure content is aligned at the top */
   width: 100%;
   height: 100%; /* Full height, adjust as needed */
-  border: 1px solid rgb(55, 55, 55);
-  background-color: rgb(72, 72, 72);
+  border: 2px solid rgb(182, 182, 182);
+  background-color: rgb(40, 40, 40);
   border-radius: 20px;  
   padding: 5px;
   padding-bottom: 20px;
@@ -483,11 +483,11 @@ input[type="file"] {
 .dalle,
 .big-custom-file-upload,
 .big-file-upload-input {
-  background-color: rgb(219, 219, 219);
+  background-color: #dad9d9;
   height: 50px; /* Standardize the height */
   border-radius: 10px;
   display: flex;
-  color: black;
+  color: rgb(21, 21, 21);
   justify-content: center;
   align-items: center;
 }
@@ -498,16 +498,16 @@ input[type="file"] {
 .big-file-upload-input {
   width: 50%; /* Adjust button width as needed for balance */
   text-align: center;
-  border: 1px solid white;
+  border: 1px solid #181818;
   transition: all 0.3s ease;
 }
 
 .uploadbutton:hover,
 .dalle:hover,
 .big-custom-file-upload:hover,
-.big-file-upload-input {
-  background-color: white;
-  color: black;
+.big-file-upload-input:hover {
+  background-color: #cdcdcd;
+  color: rgb(30, 30, 30);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -540,7 +540,7 @@ input[type="file"] {
   max-height: 30rem; /* Ensure it takes full height of its container */
   overflow-y: auto; /* Allow vertical scrolling if content overflows */
   border-radius: 15px; /* Optional: Add rounded corners */
-  background-color: rgb(46, 46, 46); /* Match the existing style */
+  background-color: rgb(40, 40, 40); /* Match the existing style */
 }
 
 .image-grid {
@@ -549,7 +549,7 @@ input[type="file"] {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  background-color: rgb(46, 46, 46);
+  background-color: rgb(30, 30, 30);
   padding: 50px;
   border-radius: 20px;
 }
@@ -576,7 +576,7 @@ input[type="file"] {
   top: 5px;
   right: 5px;
   background: red;
-  color: white;
+  color: dad9d9;
   border: none;
   border-radius: 50%;
   width: 20px;
@@ -603,7 +603,7 @@ input[type="file"] {
 .collab,
 .generate,
 .title {
-  border: 1px solid white;
+  border: 1px solid #353535;
   text-align: center;
   border-radius: 20px;
   height: 4rem;
@@ -613,7 +613,7 @@ input[type="file"] {
 .collab:hover,
 .generate:hover,
 .title:hover {
-  background-color: white;
+  background-color: #d1d1d1;
   color: black;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -624,8 +624,8 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Ensure no overflow */
-  border: 1px solid rgb(55, 55, 55); /* Optional: Add a border for clarity */
-  background-color: rgb(72, 72, 72);
+  border: 10px solid #dad9d9; /* Optional: Add a border for clarity */
+  background-color: #dad9d9;
   border-radius: 20px;  
   padding: 5px;
   padding-bottom: 20px;
@@ -645,7 +645,7 @@ input[type="file"] {
 }
 
 .modal {
-  background: white;
+  background: dad9d9;
   padding: 20px;
   border-radius: 8px;
   width: 300px; /* You can adjust the width of the modal */
