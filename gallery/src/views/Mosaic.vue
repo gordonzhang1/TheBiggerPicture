@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, defineProps, computed } from "vue";
 import axios from "axios";
 import { io } from "socket.io-client";
+import { backendData } from "@/stores/backend-data";
 
 // Sample array of image URLs (Replace with actual array in your component)
 const images = ref([
@@ -12,7 +13,33 @@ const images = ref([
 
 const showModal = ref(false); // Control the modal visibility
 const emailInput = ref(""); // Store email input
+  
+// Define route props for the ID
+const props = defineProps({
+  id: {
+    type: String,
+    required: true,
+  },
+});
 
+async function fetchData() {
+  const formData = new FormData();
+
+  formData.append('category', props.id);
+
+  const res = await fetch('http://127.0.0.1:5001/api/get-images', {
+    method: 'POST',
+    body: formData,
+  });
+
+  const json = await res.json();
+
+  images.value = json.album_images;
+}
+
+onMounted(() => {
+  fetchData();
+});
 
 function removeImage(index: number) {
   images.value.splice(index, 1);
@@ -22,13 +49,14 @@ async function handleFileUpload(event: Event) {
   if (input?.files) {
     const fileList = input.files;
     const formData = new FormData(); // Create FormData to hold files
+    formData.append("category", props.id);
 
     // Loop through the selected files
     for (let i = 0; i < fileList.length; i++) {
       const file = fileList[i];
 
       // Add file to formData
-      formData.append("files[]", file);
+      formData.append("images", file);
 
       // Read and preview the file (for images)
       const reader = new FileReader();
@@ -42,7 +70,7 @@ async function handleFileUpload(event: Event) {
     // Send the files to the backend
     try {
       const response = await axios.post(
-        "https://your-backend-url.com/upload",
+        "http://127.0.0.1:5001/api/upload-images",
         formData,
         {
           headers: {
@@ -75,6 +103,22 @@ function sendInvite() {
         // document.body.innerHTML += msg.images.map((img) => `<img src="${img}" width="200" height="200" />`).join("\n");
     });
 }
+
+const shuffle = (array: string[]) => { 
+    return array.map((a) => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map((a) => a.value); 
+}; 
+
+const goodImages = ref(["https://www.nutritionadvance.com/wp-content/uploads/2023/07/whole-and-half-oranges-1024x683.jpg"]);
+
+function generate(){
+  goodImages.value = [];
+  while (goodImages.value.length < 400){
+    goodImages.value = goodImages.value.concat(shuffle([...images.value]))
+  }
+  goodImages.value = goodImages.value.slice(0, 400);
+};
 </script>
 
 <template>
@@ -98,8 +142,14 @@ function sendInvite() {
     </div>
     <div class="right-side-con">
       <div class="right-center">
-        <div class="generate">Generate Image</div>
-        <img class="mosaicpicture" src="https://placehold.co/600x600" />
+        <div class="generate" @click="generate()">Generate Image</div>
+        <div class="mosaicpicture mosaic-grid">
+          <img id="main-img" src="https://alanbui1.github.io/codequest/assets/images/savio.jpg" />
+          <div v-for="(img, index) in goodImages" :key="index" >
+
+            <img v-if="index < 400" :src="img" :alt="'Image ' + (index + 1)" style="height: 30px; width: 30px;" class="mosaic-item"/>
+          </div>
+        </div>
         <div class="bottom-buttons">
           <button class="collab" @click="collab">Collaborate</button>
           <div class="slide">Start Slideshow</div>
@@ -194,6 +244,7 @@ function sendInvite() {
   margin-top: 50px;
   border: 1px solid white;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
 .right-side-con {
@@ -232,4 +283,46 @@ function sendInvite() {
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow to make it stand out */
 }
+
+#main-img{
+  width: 600px;
+  height: 600px;
+  object-fit: cover;
+  position: absolute;
+  opacity: 100%;
+}
+
+.mosaicpicture{
+  width: 600px;
+  height: 600px;
+  opacity: 90%;
+}
+
+.mosaic-grid{
+  width: 600px;
+  height: 600px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30px, 1fr));
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  gap: 0;
+}
+
+.mosaic-item{
+  display: block;
+  margin: 0;
+  padding: 0;
+  opacity: 35%;
+  /* mix-blend-mode: overlay; */
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+}
+
+.mosaic-item img{
+  width: 100%; /* Ensure the image fills the item */
+  height: 100%; /* Maintain full height */
+  object-fit: cover; /* Ensures the image covers the entire area without distortion */
+  display: block; /* Remove any inline spacing */
+}
+
 </style>

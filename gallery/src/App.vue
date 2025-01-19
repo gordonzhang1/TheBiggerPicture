@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink, RouterView, useRouter } from 'vue-router';
 import HelloWorld from './components/HelloWorld.vue';
 import ItemGrid from './components/ItemGrid.vue';
 
@@ -22,6 +22,29 @@ function logOut(){
   
   logout({ logoutParams: { returnTo: window.location.origin } });
         
+}
+
+const router = useRouter();
+
+async function createNewMosaic() {
+  console.log(user.value)
+  if (!user.value || !user.value.email) return;
+
+  const formData = new FormData();
+
+  formData.append('image_name', 'New Mosaic');
+  formData.append('user', user.value.email);
+
+  const res = await fetch('http://127.0.0.1:5001/api/create-category', {
+    method: 'POST',
+    body: formData
+  });
+
+  const json = await res.json();
+
+  const id = json.id;
+  
+  router.push(`/mosaic/${id}`);
 }
 
 async function fetchData(email: string | undefined) {
@@ -57,7 +80,7 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
     <RouterLink to="/dashboard" @click="login">Log in</RouterLink>
     <button @click="logOut">Log Out</button>
     <RouterLink to="/dashboard">DASHBOARD</RouterLink>
-    <RouterLink to="/mosaic">MOSAIC</RouterLink>
+    <a @click="createNewMosaic" class="manual-router-link">MOSAIC</a>
     <h1>{{user? user.email : null}}</h1>
     
   </nav>
@@ -98,5 +121,9 @@ html, body {
 }
 .router-view {
   margin-top: 2rem;
+}
+
+.manual-router-link {
+  cursor: pointer;
 }
 </style>
