@@ -199,8 +199,12 @@ def upload_big():
         category_id = request.form["category_id"]
         file = request.files.getlist('file')[0]
 
-        # save image to s3
-        url = "" # GET FROM S3
+        extension = file.name.rsplit('.', 1)[1].lower()
+        stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
+
+        s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=file)
+
+        url = os.getenv("S3_BUCKET_BASE_URL") + stored_filename
 
         sql = f"UPDATE categories SET url = '{url}' WHERE id = '{category_id}'"
 
