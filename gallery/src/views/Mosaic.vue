@@ -177,9 +177,28 @@ function closedalle() {
   showDalleModal.value = false; // Close the modal without sending an invite
 }
 
-function sendDalleRequest() {
-  console.log("Sending Dall-E request");
+async function sendDalleRequest() {
   closedalle();
+  console.log("Sending Dall-E request");
+  console.log(dalleInput);
+  const formData = new FormData();
+  formData.append("prompt", dalleInput.value);
+  formData.append("category_id", props.id);
+  try {
+      const response = await axios.post(
+        "http://127.0.0.1:5001/api/generate-dalle",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Required for file uploads
+          },
+        }
+      );
+      console.log("Upload successful:", response.data); // Handle successful response
+      // You can update the UI with the server response if needed
+    } catch (error) {
+      console.error("Error uploading files:", error); // Handle error
+    }
 }
 
 const imageText = ref(""); // Store the text entered by the user
