@@ -136,7 +136,7 @@ def delete_image():
     image_url = request.form['url']
     category = request.form['category']
 
-    sql = f"DELETE FROM images WHERE url=\"{image_url}\""
+    sql = f"DELETE FROM images WHERE url='{image_url}'"
     mycursor.execute(sql)
 
     mydb.commit()
@@ -154,7 +154,7 @@ def get_mosaics():
 
     userid = request.form['user']
     
-    sql = f"SELECT * FROM categories WHERE user=\"{userid}\""
+    sql = f"SELECT * FROM categories WHERE user='{userid}'"
     # val = (userid,)
 
     mycursor.execute(sql)
@@ -215,8 +215,8 @@ def upload_big():
     if "category_id" in request.form and "file" in request.files:
         category_id = request.form["category_id"]
         file = request.files.getlist('file')[0]
-
-        extension = file.name.rsplit('.', 1)[1].lower()
+        
+        extension = file.filename.rsplit('.', 1)[1].lower()
         stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
 
         s3.Bucket(os.getenv("S3_BUCKET_NAME")).put_object(Key=stored_filename, Body=file)
