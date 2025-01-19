@@ -214,6 +214,10 @@ onMounted(() => {
     console.log('test!');
     images.value = images.value.filter((val) => val != msg.url);
   });
+
+  socket.on(`edit big image ${props.id}`, (msg) => {
+    bigImage.value = msg.url;
+  })
 })
 
 </script>

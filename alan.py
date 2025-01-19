@@ -232,6 +232,10 @@ def upload_big():
 
         mycursor.execute(sql)
         mydb.commit()
+
+        socketio.emit(f"edit big image {category_id}", {
+            "url": url
+        })
         
         return {"url": url}
     
