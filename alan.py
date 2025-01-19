@@ -19,20 +19,20 @@ cors = CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 s3 = boto3.resource("s3")
 
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="uofthacks12!",
-  database="users"
-)
-
 # mydb = mysql.connector.connect(
-#   host=os.getenv('HOST'),
-#   user=os.getenv('USER'),
-#   password=os.getenv('PASSWORD'),
-#   database=os.getenv('DATABASE'),
-#   port=os.getenv('PORT')
+#   host="localhost",
+#   user="root",
+#   password="uofthacks12!",
+#   database="users"
 # )
+
+mydb = mysql.connector.connect(
+  host=os.getenv('HOST'),
+  user=os.getenv('USER'),
+  password=os.getenv('PASSWORD'),
+  database=os.getenv('DATABASE'),
+  port=os.getenv('PORT')
+)
 
 mycursor = mydb.cursor()
 
@@ -106,21 +106,21 @@ def get_images():
 
 @app.post("/api/create-category")
 def create_category():
-    if "image_name" not in request.form or "user" not in request.form:
-        abort(400)
+    # if "image_name" not in request.form or "user" not in request.form:
+    #     abort(400)
 
-    user = request.form["user"]
+    # user = request.form["user"]
     
     category_id = random.randint(0, 2000000000)
 
-    # mycursor.execute(f"SELECT MAX(id) FROM categories")
-    # highest = mycursor.fetchall()[0][0]
+    # # mycursor.execute(f"SELECT MAX(id) FROM categories")
+    # # highest = mycursor.fetchall()[0][0]
 
-    sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, \"\", %s)"
-    val = (category_id, request.form['image_name'], user)
-    mycursor.execute(sql, val)
+    # sql = "INSERT INTO categories (id, image_name, url, user) VALUES (%s, %s, \"\", %s)"
+    # val = (category_id, request.form['image_name'], user)
+    # mycursor.execute(sql, val)
 
-    mydb.commit()
+    # mydb.commit()
     
     return {"success": True, "id": category_id}
 

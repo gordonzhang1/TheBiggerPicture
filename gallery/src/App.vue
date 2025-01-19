@@ -28,7 +28,10 @@ const router = useRouter();
 
 async function createNewMosaic() {
   console.log(user.value)
-  if (!user.value || !user.value.email) return;
+
+  if (!user.value || !user.value.email) {
+    return;
+  }
 
   const formData = new FormData();
 
@@ -89,10 +92,23 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
 </template>
 
 <style scoped>
-html, body {
+body {
   width: 100%;
   height: 100%;
   margin: 0;
+}
+
+html {
+    overflow: scroll;
+    overflow-x: hidden;
+}
+::-webkit-scrollbar {
+    width: 0;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
 }
 
 .nav {
