@@ -238,7 +238,9 @@ onMounted(() => {
     <!-- Placeholder for an image -->
     <div class="placeholder-container">
       <!-- Optionally, add a placeholder image -->
-      <img :src="hoveredImage || 'https://placehold.co/600x400'" alt="Placeholder Image" />
+       <div class="placeholder-subcontainer">
+        <img :src="hoveredImage || 'https://placehold.co/600x400'" alt="Placeholder Image" />
+       </div>
     
 
       <div class="uploadbigcon">
@@ -294,7 +296,6 @@ onMounted(() => {
       <div class="bottom-buttons">
         <button class="generate" @click="generate()">Generate Image</button>
         <button class="collab" @click="collab">Collaborate</button>
-        <button class="slide">Start Slideshow</button>
       </div>
     </div>
   </div>
@@ -352,11 +353,21 @@ onMounted(() => {
   padding: 20px;
 }
 
-.placeholder-container img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px; /* Rounded corners for the placeholder image */
+.placeholder-subcontainer {
+  padding: 40px;
+  width: 600px; /* Set a fixed width for the placeholder */
+  height: 600px; /* Set a fixed height for the placeholder */
+  overflow: hidden; /* Hide overflow to keep the black bars */
+  position: relative; /* Ensure positioning of the image inside the container */
+  border-radius: 10px; /* Rounded corners for the placeholder */
 }
+
+.placeholder-subcontainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image covers the entire container, keeping aspect ratio */
+}
+
 
 .right-center {
   width: 100%;
@@ -528,7 +539,6 @@ input[type="file"] {
 }
 
 .collab,
-.slide,
 .generate {
   border: 1px solid white;
   text-align: center;
@@ -538,7 +548,6 @@ input[type="file"] {
 }
 
 .collab:hover,
-.slide:hover,
 .generate:hover {
   background-color: white;
   color: black;
