@@ -173,10 +173,13 @@ const goodImages: any = ref([]);
 
 function generate() {
   goodImages.value = [];
-  while (goodImages.value.length < 400) {
+  setTimeout(() => {
+    while (goodImages.value.length < 400) {
     goodImages.value = goodImages.value.concat(shuffle([...images.value]))
   }
   goodImages.value = goodImages.value.slice(0, 400);
+  }, 0)
+  
 };
 
 function dalle(){
@@ -608,8 +611,8 @@ input[type="file"] {
   display: block;
   margin: 0;
   padding: 0;
-  opacity: 35%;
-  /* mix-blend-mode: overlay; */
+  opacity: 60%;
+  mix-blend-mode: overlay; 
   grid-column-gap: 0;
   grid-row-gap: 0;
 }
