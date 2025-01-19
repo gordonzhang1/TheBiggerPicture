@@ -245,6 +245,21 @@ def upload_big():
     
     return {"url": ""}
 
+@app.post('/api/edit-title')
+def edit_title():
+    if "category_id" in request.form and "title" in request.form:
+        category_id = request.form["category_id"]
+        title = request.form["title"]
+
+        sql = f"UPDATE categories SET image_name = '{title}' WHERE id = '{category_id}'"
+
+        mycursor.execute(sql)
+        mydb.commit()
+
+        return {"title": title}
+    
+    return {"title": ""}
+
 socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://localhost:5174", "https://uofthacks-12.vercel.app"])
 
 if __name__ == "__main__":

@@ -229,6 +229,24 @@ async function sendDalleRequest() {
 
 async function sendTitleRequest() {
   console.log("Sending Title request");
+  const formData = new FormData();
+  formData.append("title", titleInput.value);
+  formData.append("category_id", props.id);
+  try {
+      const response = await axios.post(
+        "https://uofthacks-12.onrender.com/api/edit-title",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Required for file uploads
+          },
+        }
+      );
+      console.log("Upload successful:", response.data); // Handle successful response
+      // You can update the UI with the server response if needed
+    } catch (error) {
+      console.error("Error uploading files:", error); // Handle error
+    }
 }
 
 const imageText = ref(""); // Store the text entered by the user
