@@ -2,6 +2,8 @@
 import { onMounted, ref, defineProps, computed } from "vue";
 import axios from "axios";
 import { backendData } from "@/stores/backend-data";
+import { socket } from "@/socket";
+import { io } from "socket.io-client";
   
 // Define route props for the ID
 const props = defineProps({
@@ -12,7 +14,7 @@ const props = defineProps({
 });
 
 // Sample array of image URLs (Replace with actual array in your component)
-const images = ref([
+const images = ref<string[]>([
   // "https://placehold.co/600x600",
   // "https://placehold.co/600x600",
   // "https://placehold.co/600x600",
@@ -70,8 +72,17 @@ onMounted(() => {
   fetchData();
 });
 
-function removeImage(index: number) {
-  images.value.splice(index, 1);
+async function removeImage(url: string) {
+  // images.value.splice(index, 1);
+
+  const formData = new FormData();
+  formData.append('url', url);
+  formData.append('category', props.id);
+
+  const res = await fetch('http://127.0.0.1:5001/api/delete-image', {
+    method: 'POST',
+    body: formData
+  });
 }
 async function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
@@ -91,7 +102,7 @@ async function handleFileUpload(event: Event) {
       const reader = new FileReader();
       reader.onload = () => {
         // Push file preview to the images array
-        images.value.push(reader.result as string);
+        // images.value.push(reader.result as string);
       };
       reader.readAsDataURL(file); // Convert the file to a data URL for preview
     }
@@ -130,6 +141,21 @@ function generate() {
   }
   goodImages.value = goodImages.value.subarray(0, 400);
 };
+
+let socket;
+onMounted(() => {
+  socket = io('http://127.0.0.1:5001');
+  console.log(socket);
+  socket.on(`add image ${props.id}`, (msg) => {
+    images.value = [...images.value, ...msg.images];
+  });
+  console.log(`delete image ${props.id}`)
+  socket.on(`delete image ${props.id}`, (msg) => {
+    console.log('test!');
+    images.value = images.value.filter((val) => val != msg.url);
+  });
+})
+
 </script>
 
 <template>
@@ -139,7 +165,7 @@ function generate() {
         <div class="image-grid">
           <div v-for="(img, index) in images" :key="index" class="image-item">
             <img :src="img" :alt="'Image ' + (index + 1)" />
-            <button class="delete-btn" @click="removeImage(index)">X</button>
+            <button class="delete-btn" @click="removeImage(img)">X</button>
           </div>
         </div>
       </div>

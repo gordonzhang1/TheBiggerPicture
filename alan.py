@@ -129,15 +129,20 @@ def create_category():
 
 @app.post("/api/delete-image")
 def delete_image():
-    if "id" not in request.form:
+    if "url" not in request.form or 'category' not in request.form:
         abort(400)
 
-    image_id = request.form['id']
+    image_url = request.form['url']
+    category = request.form['category']
 
-    sql = f"DELETE FROM images WHERE id={image_id}"
+    sql = f"DELETE FROM images WHERE url=\"{image_url}\""
     mycursor.execute(sql)
 
     mydb.commit()
+    print(f"delete image ${category}")
+    socketio.emit(f"delete image {category}", {
+        "url": image_url
+    })
     
     return {"success": True}
 
@@ -215,7 +220,7 @@ def upload_big():
     
     return {"url": ""}
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173"])
 
 if __name__ == "__main__":
     print("RUNNING")
