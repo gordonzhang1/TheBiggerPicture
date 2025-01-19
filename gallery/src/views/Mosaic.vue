@@ -13,7 +13,6 @@ const showModal = ref(false); // Control the modal visibility
 const emailInput = ref(""); // Store email input
 const showDalleModal = ref(false); // Control the modal visibility
 const dalleInput = ref(""); // Store email input
-import { socket } from "@/socket";
   
 // Define route props for the ID
 const props = defineProps({
@@ -75,7 +74,7 @@ async function handleFileUpload(event: Event) {
       const reader = new FileReader();
       reader.onload = () => {
         // Push file preview to the images array
-        images.value.push(reader.result ? reader.result as string : "");
+        // images.value.push(reader.result ? reader.result as string : "");
       };
       reader.readAsDataURL(file); // Convert the file to a data URL for preview
     }
