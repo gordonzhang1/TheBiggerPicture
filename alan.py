@@ -31,11 +31,11 @@ openai.api_key = os.getenv('OPENAI_KEY')
 # )
 
 mydb = mysql.connector.connect(
-  host=os.getenv('HOST'),
-  user=os.getenv('USER'),
+  host=os.getenv('SQLHOST'),
+  user="doadmin",
   password=os.getenv('PASSWORD'),
   database=os.getenv('DATABASE'),
-  port=os.getenv('PORT')
+  port=os.getenv('SQLPORT')
 )
 
 mycursor = mydb.cursor()
@@ -158,7 +158,7 @@ def get_mosaics():
         abort(400)
 
     userid = request.form['user']
-
+    
     sql = f"SELECT * FROM categories WHERE user='{userid}'"
     # val = (userid,)
 
@@ -220,7 +220,7 @@ def upload_big():
     if "category_id" in request.form and "file" in request.files:
         category_id = request.form["category_id"]
         file = request.files.getlist('file')[0]
-
+        
         extension = file.filename.rsplit('.', 1)[1].lower()
         stored_filename = f"{uuid4()}.{extension}" # for S3, to ensure unique filename
 
@@ -241,4 +241,4 @@ socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://
 
 if __name__ == "__main__":
     print("RUNNING")
-    socketio.run(app, port=5001,allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=5001,allow_unsafe_werkzeug=True)
