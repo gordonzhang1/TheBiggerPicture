@@ -91,6 +91,7 @@ html, body {
   width: 100%; /* Ensure it takes full width */
   height: 400px; /* Full screen height */
   box-sizing: border-box; /* Include padding in the width/height calculation */
+  margin-bottom: 500px;
 }
 
 /* Individual grid item styling */

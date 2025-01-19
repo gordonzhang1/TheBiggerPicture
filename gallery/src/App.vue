@@ -79,15 +79,30 @@ watch(() => user.value && user.value.email, fetchData, { immediate: true })
 </script>
 
 <template>
-  <nav class="nav">
-    <RouterLink v-if="!isAuthenticated" to="/dashboard" @click="login">Log in</RouterLink>
-    <a href="#" v-if="isAuthenticated" @click="logOut">Log Out</a>
-    <RouterLink to="/dashboard">DASHBOARD</RouterLink>
-    <a @click="createNewMosaic" class="manual-router-link">MOSAIC</a>
-    <h1>{{user? user.email : null}}</h1>
-    
-  </nav>
-  <RouterView class="router-view" />
+  <div class="main-container">
+    <!-- Show log in button only if user is not authenticated -->
+    <div v-if="!isAuthenticated" class="login-button">
+      <div class="greetings">
+     <h1>
+      <strong>The Bigger Picture.</strong>
+     </h1>
+      <h3>
+        A more meaningful way to share your photos.
+      </h3>
+     </div>
+      <RouterLink to="/dashboard" @click="login">LOGIN</RouterLink>
+    </div>
+
+    <nav class="nav">
+      <RouterLink to="/dashboard">DASHBOARD</RouterLink>
+      <a @click="createNewMosaic" class="manual-router-link">MOSAIC</a>
+      <h1>{{ user ? user.email : null }}</h1>
+      <a href="#" v-if="isAuthenticated" @click="logOut">Log Out</a>
+    </nav>
+
+    <!-- The main router view where your page content will be rendered -->
+    <RouterView class="router-view" />
+  </div>
 
 </template>
 
@@ -142,4 +157,57 @@ html {
 .manual-router-link {
   cursor: pointer;
 }
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  margin-top: 5rem;
+}
+
+.nav a, .nav h1 {
+  color: white;
+}
+
+.login-button {
+  display: inline-flex;
+  margin-top: 3rem;
+  margin-bottom: 20px;
+  background-color: #f0f0f0; /* Add some styling to make it visible */
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  width: 300px;
+  height:100px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.login-button:hover {
+  background-color: #e0e0e0;
+  transition: all 0.3s ease;
+  scale: 1.05;
+} 
+
+.greetings {
+  margin-top: 10%;
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 2.5rem;
+  font-weight:bold;
+  text-align: center;
+  color: aliceblue;
+  gap: 2rem;
+  margin-bottom: 1rem;
+}
+
+.greetings h3 {
+  font-size: 1.5rem;
+}
+
 </style>
