@@ -33,8 +33,7 @@
     <br />
     <a href="https://youtu.be/EpfvE0dZnCM" target="_blank"><strong>View Demo »</strong></a>
     <br />
-    <br />
-    <a href="https://uofthacks-12.vercel.app/">Visit Website</a>
+
   </p>
 </div>
 
